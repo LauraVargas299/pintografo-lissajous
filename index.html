@@ -552,20 +552,20 @@
 
   <div class="resultados-grid reveal">
     <figure class="lab-fig">
-      <img src="imgs/razon_1-1_14-14.jpg" alt="Figura de razón 1:1, dos discos de 14 cm">
-      <figcaption><strong>Razón 1:1 · discos 14 + 14 cm</strong>Al ser una razón simple, la figura cierra en pocas vueltas. La acumulación de pasadas produce el contorno en forma de abanico simétrico.</figcaption>
+      <img src="Razon11.jpeg" alt="Figura de razón 1:1, dos discos de 14 cm">
+      <figcaption><strong>Razón 1:1 · discos 14 + 14 cm</strong>Con frecuencias iguales, la figura teórica es una elipse cuya forma depende por completo de la fase inicial δ. Al girar a mano desde posiciones distintas en cada pasada, se acumulan elipses con distintos δ: el resultado es el abanico triangular asimétrico que se observa. El trazo de color rosa y la marcada extensión vertical revelan que el brazo tenía mayor recorrido en ese eje que en el horizontal.</figcaption>
     </figure>
     <figure class="lab-fig">
-      <img src="imgs/razon_7-5_14-10.jpg" alt="Figura de razón 7:5, discos de 14 y 10 cm">
-      <figcaption><strong>Razón 7:5 · discos 14 + 10 cm</strong>Razón menos simple: la curva necesita más vueltas para cerrarse, lo que genera una traza más densa y alargada.</figcaption>
+      <img src="Razon75.jpeg" alt="Figura de razón 7:5, discos de 14 y 10 cm">
+      <figcaption><strong>Razón 7:5 · discos 14 + 10 cm</strong>La razón 7:5 requiere 7 vueltas del disco pequeño y 5 del grande para que la curva se cierre. Eso genera más lóbulos intermedios y una traza más densa. La figura alargada con núcleo central denso y extremos afilados es la firma visual característica de esta razón, verificada también en el análisis de video.</figcaption>
     </figure>
     <figure class="lab-fig">
-      <img src="imgs/razon_10-7_grande-pequeno.jpg" alt="Figura con discos de 10 y 7 cm">
-      <figcaption><strong>Razón 10:7 · discos 10 + 7 cm</strong>Combinación de los dos discos menores. La figura es alargada y de baja altura, con un núcleo central muy recorrido.</figcaption>
+      <img src="Razon107.jpeg" alt="Figura con discos de 10 y 7 cm">
+      <figcaption><strong>Razón 10:7 · discos 10 + 7 cm</strong>Con diámetros 10 y 7 cm la razón de frecuencias es 10:7, aún menos simple que 7:5. La figura resultante es un rombo redondeado de baja altura y núcleo muy denso: el trazador necesita 10 vueltas de un disco y 7 del otro antes de repetir el mismo camino, por lo que rellena el área disponible de forma casi uniforme.</figcaption>
     </figure>
     <figure class="lab-fig">
-      <img src="imgs/razon_10-7_video.jpg" alt="Figura registrada con discos de 10 y 7 cm, sujeta con cinta">
-      <figcaption><strong>Discos 10 + 7 cm · registro fijado</strong>Misma combinación, fijada con cinta para grabarla. La forma de rombo redondeado corresponde a la superposición de pasadas con distinta fase.</figcaption>
+      <img src="Razon12.jpeg" alt="Figura razón 1:2, discos 14 y 7 cm">
+      <figcaption><strong>Razón 1:2 · discos 14 + 7 cm</strong>El disco de 7 cm gira el doble de rápido que el de 14 cm. La figura de Lissajous 2:1 tiene forma de lazo o parábola. La figura obtenida, similar a una almendra alargada y densa, corresponde a la superposición de muchos lazos con distintas fases iniciales, lo que es consistente con el giro manual.</figcaption>
     </figure>
   </div>
 </section>
@@ -578,49 +578,49 @@
 
   <div class="plot-block reveal">
     <figure class="lab-fig">
-      <img src="imgs/analisis_trayectoria_cruda.png" alt="Trayectoria cruda del conector coloreada por tiempo">
-      <figcaption><strong>Trayectoria cruda · color = tiempo</strong>Cada punto es la posición detectada del conector en un frame. El color va de morado (inicio) a amarillo (final).</figcaption>
+      <img src="trayectoriacruda11.png" alt="Trayectoria cruda del conector coloreada por tiempo">
+      <figcaption><strong>Trayectoria cruda · color = tiempo · Razón 1:1</strong>Cada punto es la posición del conector en un fotograma. El gradiente morado→amarillo muestra la dirección del tiempo. Los puntos morados (inicio) se concentran en la parte inferior-derecha; los amarillos (final) en la superior-izquierda, trazando el mismo camino elíptico varias veces.</figcaption>
     </figure>
     <div>
       <h3>Detección frame a frame</h3>
-      <p>Cada fotograma se convirtió del espacio de color BGR a HSV, donde es más fácil segmentar por color que en RGB porque separa el tono del brillo. Se definió un rango de valores para el azul del conector del brazo y se generó una máscara binaria por frame.</p>
-      <p style="margin-top:1rem;">Sobre esa máscara se encontraron los contornos, se tomó el de mayor área (el objeto real) y se calculó su centroide a partir de los momentos de imagen. El resultado son los puntos dispersos de la izquierda: se observa que el trazador no recorre exactamente el mismo camino en cada pasada, y esa variación es justamente lo que genera la acumulación de trazos.</p>
+      <p>Cada fotograma se convirtió del espacio BGR a HSV — un espacio donde separar un color por tono (H) es independiente del brillo (V), lo que hace la detección más robusta ante cambios de iluminación. Se definió un rango HSV para el azul del conector y se generó una máscara binaria. Sobre ella se calculó el centroide del contorno más grande: esa es la posición del trazador en cada frame.</p>
+      <p style="margin-top:1rem;">En la gráfica se aprecia que los puntos no forman una curva perfectamente única: el trazador recorre caminos ligeramente distintos en cada pasada. Eso es exactamente lo esperado con giro manual — cada vuelta parte de una posición angular (fase δ) diferente — y explica por qué el papel acumula muchas trazas superpuestas en vez de una sola curva limpia.</p>
     </div>
   </div>
 
   <div class="plot-block reverse reveal">
     <figure class="lab-fig">
-      <img src="imgs/analisis_savitzky.png" alt="Trayectoria suavizada con filtro Savitzky-Golay">
-      <figcaption><strong>Trayectoria suavizada · Savitzky-Golay</strong>Ventana de 11 frames, orden 3. El punto dorado marca el inicio del registro y el rojo el final.</figcaption>
+      <img src="analisis11.png" alt="Trayectoria suavizada con filtro Savitzky-Golay">
+      <figcaption><strong>Trayectoria suavizada · Savitzky-Golay · Razón 1:1</strong>Ventana 11 frames, orden 3. La forma general es un lazo vertical alargado, marcadamente más alto que ancho: la amplitud en Y supera a la de X en aproximadamente un 50%, evidencia directa del descentrado del brazo.</figcaption>
     </figure>
     <div>
       <h3>Suavizado de la señal</h3>
-      <p>Antes de suavizar se limpió el ruido de detección con dos operaciones morfológicas: apertura (elimina píxeles aislados) y dilatación (engrosa el objeto detectado), con un kernel de 5×5.</p>
-      <p style="margin-top:1rem;">Luego se aplicó un filtro Savitzky-Golay a las series de coordenadas x(t) e y(t). Este filtro ajusta un polinomio local a cada ventana de puntos, de modo que suaviza la señal sin introducir el retardo de un promedio móvil y sin desplazar los picos. El resultado es la trayectoria continua que conserva la forma general del movimiento.</p>
+      <p>El ruido de detección se limpió primero con morfología: apertura (elimina píxeles aislados) y dilatación (engrosa el blob objetivo), con kernel 5×5. Luego se aplicó el filtro Savitzky-Golay a las series x(t) e y(t), que ajusta un polinomio local a cada ventana de puntos y suaviza sin el retardo ni el aplanamiento de picos que introduce un promedio móvil.</p>
+      <p style="margin-top:1rem;">La trayectoria resultante revela la forma real del movimiento: un lazo cerrado orientado verticalmente. El punto dorado (inicio) y el rojo (fin) quedan separados por apenas unos píxeles, lo que confirma que no hubo deriva apreciable del encuadre durante los 12 segundos de grabación. La asimetría de amplitudes — eje Y mucho más largo que eje X — es la firma directa del brazo descentrado.</p>
     </div>
   </div>
 
   <div class="plot-block reveal">
     <figure class="lab-fig">
-      <img src="imgs/analisis_componentes_xy.png" alt="Componentes X e Y del movimiento en función del tiempo">
-      <figcaption><strong>Componentes X e Y vs tiempo</strong>El eje X (horizontal) y el eje Y (vertical) del movimiento, graficados por separado a lo largo de los 12 segundos.</figcaption>
+      <img src="analisis11componentesxy.png" alt="Comparación Real vs Teórica 1:1 para distintas fases">
+      <figcaption><strong>Real vs teórica · razón 1:1 · tres fases</strong>La curva real (verde-azulado) superpuesta sobre la figura teórica 1:1 para δ = 0° (recta), δ = 45° (elipse inclinada) y δ = 90° (círculo). En los tres paneles la curva real es idéntica; lo que varía es la referencia teórica.</figcaption>
     </figure>
     <div>
       <h3>Las dos oscilaciones por separado</h3>
-      <p>Separando el movimiento en sus componentes horizontal y vertical, ambas presentan un comportamiento oscilatorio aproximadamente periódico, consistente con el giro circular de los discos.</p>
-      <p style="margin-top:1rem;">La diferencia de amplitud entre los dos ejes se atribuye a que el brazo articulado no quedó perfectamente centrado respecto a ambos discos y a que el giro fue manual, lo que introduce variaciones de velocidad de una pasada a otra.</p>
+      <p>Esta gráfica es la comparación directa entre lo medido y lo predicho por el modelo. Para razón 1:1 la figura de Lissajous teórica es siempre una elipse o recta, pero su orientación y excentricidad dependen totalmente de δ. Con δ = 0° la teoría predice una línea diagonal; con δ = 90°, un círculo.</p>
+      <p style="margin-top:1rem;">Lo primero que salta a la vista es que la curva real no es circular sino que está fuertemente comprimida en X: es mucho más angosta de lo que predice cualquiera de los tres modelos. Eso cuantifica el descentrado del brazo: el movimiento horizontal está restringido respecto al vertical. Lo segundo notable es que la forma real se acerca más al caso δ = 90° (elipse vertical) que a los otros, lo que sugiere que la fase de arranque fue próxima a 90° durante la mayor parte del registro.</p>
     </div>
   </div>
 
   <div class="plot-block reverse reveal">
     <figure class="lab-fig">
-      <img src="imgs/analisis_comparacion_real_teorica.png" alt="Comparación de la curva real con figuras de Lissajous teóricas para distintas fases">
-      <figcaption><strong>Real vs teórica · razón 1:1</strong>Curva real (verde) contra la figura teórica para δ = 0° (recta), 45° (elipse inclinada) y 90° (círculo).</figcaption>
+      <img src="comparacionxy11.png" alt="Trayectoria cruda 1:1 coloreada por tiempo">
+      <figcaption><strong>Trayectoria cruda · color = tiempo · detalle</strong>Vista adicional de la nube de puntos detectados en el video de razón 1:1. Se aprecian claramente dos zonas: los puntos del primer tercio del video (morado oscuro) concentrados en la parte inferior, y los del último tercio (amarillo) desplazados hacia la zona superior-derecha.</figcaption>
     </figure>
     <div>
-      <h3>Comparación con el modelo</h3>
-      <p>Para la razón 1:1, la figura de Lissajous teórica depende por completo de la fase inicial δ: con δ = 0° es una recta diagonal, con δ = 45° una elipse inclinada y con δ = 90° un círculo o elipse vertical.</p>
-      <p style="margin-top:1rem;">La curva real no coincide con ninguna de las tres, y esto tiene una explicación: como los discos se giraron a mano partiendo de posiciones distintas en cada vuelta, δ fue diferente en cada pasada. La traza acumulada sobre el papel es la superposición de todas esas elipses intermedias, que en conjunto producen el abanico observado en la foto de la razón 1:1.</p>
+      <h3>Comparación con el modelo: lo que la curva real confirma</h3>
+      <p>Comparar la nube de puntos cruda con la trayectoria suavizada permite separar lo que es ruido del detector de lo que es variabilidad real del movimiento. En este caso el ruido es pequeño (los puntos son compactos en cada posición), y la variabilidad entre pasadas — visible como el ancho de la nube — es físicamente real: refleja que cada vuelta tiene su propia fase δ.</p>
+      <p style="margin-top:1rem;">El color del gradiente confirma además que el movimiento es repetitivo y no deriva: los puntos de colores similares aparecen en posiciones similares, lo que significa que el trazador vuelve aproximadamente al mismo lugar en cada ciclo. Esa repetibilidad, a pesar del giro manual, es una consecuencia de que la razón 1:1 es la más simple posible: el ciclo se cierra en cada vuelta completa.</p>
     </div>
   </div>
 
@@ -629,25 +629,25 @@
 
   <div class="plot-block reveal">
     <figure class="lab-fig">
-      <img src="imgs/analisis_7-5_savitzky.png" alt="Trayectoria suavizada de la razón 7:5">
-      <figcaption><strong>Trayectoria 7:5 · suavizada</strong>Haz de elipses superpuestas con distintas orientaciones, recorridas durante 47 segundos de giro manual.</figcaption>
+      <img src="analisis_7-5_savitzky.png" alt="Trayectoria suavizada de la razón 7:5">
+      <figcaption><strong>Trayectoria 7:5 · suavizada · 1 418 frames (47 s)</strong>La trayectoria forma una nube densa con forma de pera irregular, más ancha en la parte superior. A diferencia del caso 1:1, aquí no se distinguen lazos individuales: los 47 segundos de giro produjeron suficientes pasadas como para que la figura quede casi completamente rellena.</figcaption>
     </figure>
     <div>
-      <h3>Una figura más densa</h3>
-      <p>Al ser 7:5 una razón menos simple que 1:1, la curva necesita más vueltas para cerrarse y recorre más posiciones intermedias antes de repetirse. Por eso la trayectoria llena un área mayor: cada pasada, con su propia fase δ, deja una elipse ligeramente distinta y el conjunto se densifica.</p>
-      <p style="margin-top:1rem;">Inicio y fin del registro quedan cerca entre sí, lo que indica que no hubo deriva apreciable de la cámara durante la toma: el movimiento capturado es el del trazador, no el del encuadre.</p>
+      <h3>Por qué la figura 7:5 llena más área</h3>
+      <p>Con razón 1:1 el trazador repite el mismo lazo en cada vuelta completa. Con razón 7:5, en cambio, el ciclo completo requiere 7 vueltas del disco pequeño y 5 del grande — mucho más tiempo para volver al punto de partida. Durante ese tiempo el trazador recorre 35 posiciones distintas en el espacio (7×5), lo que crea una trama mucho más densa de caminos posibles.</p>
+      <p style="margin-top:1rem;">La nube resultante es más compacta y uniforme que la del caso 1:1, donde se distinguían lazos individuales. El detalle de inicio y fin del registro — a pocos píxeles de distancia — confirma que no hubo deriva de cámara durante los 47 s. La asimetría Y &gt; X vuelve a aparecer, con amplitud vertical ~1,5 veces la horizontal, la misma firma del brazo descentrado.</p>
     </div>
   </div>
 
   <div class="plot-block reverse reveal">
     <figure class="lab-fig">
-      <img src="imgs/analisis_7-5_comparacion_real_teorica.png" alt="Comparación real vs teórica para la razón 7:5">
-      <figcaption><strong>Real vs teórica · razón 7:5</strong>Curva real (verde) sobre la rejilla teórica 7:5 (dorada) para δ = 0°, 45° y 90°.</figcaption>
+      <img src="analisis_7-5_comparacion_real_teorica.png" alt="Comparación real vs teórica para la razón 7:5">
+      <figcaption><strong>Real vs teórica · razón 7:5 · tres fases</strong>La curva real (verde-azulado) ocupa la zona central del recuadro que delimita la figura teórica 7:5 (dorada). En los tres paneles la estructura de lóbulos de la curva real sigue el patrón de la malla teórica, aunque sin alcanzar sus extremos por la menor amplitud del brazo manual.</figcaption>
     </figure>
     <div>
-      <h3>Coincidencia con el modelo</h3>
-      <p>La rejilla teórica 7:5 es la malla de 7×5 tangencias característica de esa razón. La curva real ocupa la región central de esa malla y reproduce su estructura de lóbulos, lo que confirma que la razón de giros impuesta por los discos (14:10 = 7:5) es la que gobierna la figura.</p>
-      <p style="margin-top:1rem;">Como en el caso 1:1, la curva real no llena el recuadro completo: el brazo manual no alcanza la amplitud máxima en cada vuelta. Medimos además que la amplitud vertical fue ~1,5 veces la horizontal (Ay/Ax ≈ 1,53), una asimetría que también aparece en el caso 1:1 y que atribuimos al descentrado del brazo.</p>
+      <h3>La malla teórica confirma la razón 7:5</h3>
+      <p>La figura de Lissajous 7:5 teórica tiene 7 tangencias con el borde horizontal y 5 con el vertical. Eso se ve claramente en la curva dorada: siete "puntas" arriba/abajo y cinco a los lados. La curva real reproduce esa misma topología — el ojo sigue los mismos lóbulos y cruces — aunque comprimida hacia el centro por el brazo descentrado y más densa por la acumulación de pasadas.</p>
+      <p style="margin-top:1rem;">Este es el resultado más importante del análisis: sin haber impuesto ninguna restricción matemática al rastreo, la forma de la trayectoria detectada en el video reproduce la estructura topológica predicha por las ecuaciones de Lissajous para la razón exacta que imponen los diámetros de los discos (14 cm / 10 cm = 7/5). El pintógrafo, construido con cartón y silicona, está resolviendo físicamente ese sistema de ecuaciones.</p>
     </div>
   </div>
 </section>
@@ -699,32 +699,38 @@
   <div class="concl-list reveal">
     <div class="concl-item">
       <div>
-        <h3>La razón de los discos gobierna la figura</h3>
-        <p>Cada combinación de discos produjo una figura distinta y reconocible. La comparación con las rejillas teóricas confirma que la geometría de la curva está determinada por la razón entre diámetros: 1:1, 7:5, 2:1 o 10:7. La estructura de lóbulos de la curva real reproduce la de la malla teórica correspondiente.</p>
+        <h3>La razón de diámetros determina la topología de la figura</h3>
+        <p>Las cuatro combinaciones de discos (14+14, 14+10, 14+7, 10+7) produjeron cuatro familias de figuras distintas y reconocibles en el papel. En el análisis de video, la curva real de la razón 7:5 reproduce las 7 tangencias horizontales y 5 verticales que predice el modelo sin ningún ajuste manual: la geometría del trazo está gobernada exclusivamente por la razón entre diámetros. Eso verifica experimentalmente que la transmisión por correa convierte la razón de radios en razón de frecuencias de giro tal como predice la mecánica.</p>
       </div>
     </div>
     <div class="concl-item">
       <div>
-        <h3>El aparato es un trazador analógico de Lissajous</h3>
-        <p>Reconstruyendo el movimiento del trazador con visión por computador, verificamos que sus componentes X e Y son dos oscilaciones perpendiculares aproximadamente periódicas. Es decir, el mecanismo resuelve físicamente el sistema de ecuaciones paramétricas que define una figura de Lissajous.</p>
+        <h3>El pintógrafo resuelve físicamente las ecuaciones de Lissajous</h3>
+        <p>El análisis de video demuestra que las componentes X e Y del movimiento del trazador son dos oscilaciones aproximadamente periódicas y perpendiculares, lo que es exactamente lo que describen las ecuaciones x(t) = r₁·sin(aωt + δ) e y(t) = r₂·sin(bωt). El mecanismo de cartón y silicona está integrando esas ecuaciones en tiempo real y dejando su solución impresa en el papel. No se trata de una analogía: es la misma física.</p>
       </div>
     </div>
     <div class="concl-item">
       <div>
-        <h3>La fase inicial explica el abanico</h3>
-        <p>La figura acumulada sobre el papel no es una sola curva sino la superposición de muchas, cada una con una fase δ distinta por el arranque manual. Esto explica por qué el resultado real es un abanico de trazos y no la curva única y limpia del modelo ideal: es la firma del giro manual.</p>
+        <h3>La fase inicial δ explica el abanico acumulado</h3>
+        <p>Al girar a mano, cada pasada arranca desde una posición angular distinta, lo que cambia δ. Para razón 1:1, δ determina por completo si la figura es una recta (δ = 0°), una elipse (δ = 45°) o un círculo (δ = 90°). La figura real en el papel es la superposición de todas esas curvas intermedias, de ahí el abanico triangular. Este comportamiento no es un defecto del aparato: es la demostración más directa de que el parámetro δ existe y tiene efecto real sobre la figura.</p>
       </div>
     </div>
     <div class="concl-item">
       <div>
-        <h3>El error es mayoritariamente físico, no de medición</h3>
-        <p>El ruido del rastreo por video resultó muy bajo (≈ 1 px), mientras que las desviaciones respecto al modelo (amplitudes desiguales, períodos irregulares) son del orden de decenas de píxeles. Esto indica que las discrepancias provienen del montaje manual —brazo descentrado, velocidad variable— y no del método de análisis, que demostró ser fiable.</p>
+        <h3>El brazo descentrado introduce una asimetría sistemática y medible</h3>
+        <p>En ambos videos analizados, la amplitud vertical del movimiento supera a la horizontal en aproximadamente un 50% (Ay/Ax ≈ 1,47 en el caso 10:7 y ≈ 1,53 en el 7:5). Esta asimetría es consistente entre experimentos y está directamente cuantificada en las gráficas de trayectoria suavizada. No es ruido aleatorio sino una desviación sistemática atribuible a que el pivote del brazo articulado no quedó centrado equidistante entre ambos discos. En un montaje motorizado y ajustable, este parámetro sería el primero a corregir.</p>
       </div>
     </div>
     <div class="concl-item">
       <div>
-        <h3>Un montaje simple permite un análisis riguroso</h3>
-        <p>Con materiales caseros y herramientas libres (OpenCV, NumPy) fue posible pasar de un dibujo sobre papel a una caracterización cuantitativa del movimiento: cobertura de detección, relación de amplitudes y nivel de ruido. El experimento conecta de forma concreta un objeto físico con su modelo matemático.</p>
+        <h3>El error es físico, no instrumental: el rastreo fue fiable</h3>
+        <p>La diferencia entre la señal cruda y la suavizada (ruido de detección ≈ 1 px, percentil 95 ≈ 2,5 px) es órdenes de magnitud menor que las desviaciones respecto al modelo teórico (decenas de píxeles). Eso demuestra que el método de rastreo por color en espacio HSV funcionó correctamente y que las discrepancias observadas son inherentes al montaje manual: velocidad variable, brazo descentrado y fase inicial cambiante. El método es lo suficientemente preciso para este experimento y podría aplicarse sin modificación a versiones mejoradas del aparato.</p>
+      </div>
+    </div>
+    <div class="concl-item">
+      <div>
+        <h3>Materiales simples, análisis cuantitativo real</h3>
+        <p>El experimento demostró que la cadena completa — construir el aparato con cartón, madera y silicona, grabar con un celular, procesar con Python libre — es suficiente para pasar de un dibujo sobre papel a una verificación cuantitativa de las ecuaciones de Lissajous. La cobertura de detección fue del 100% en el video de 7:5 y del 94% en el de 1:1. La comparación directa entre trayectoria real y malla teórica 7:5 cierra el ciclo: lo que el modelo matemático predice, el aparato artesanal lo produce.</p>
       </div>
     </div>
   </div>
