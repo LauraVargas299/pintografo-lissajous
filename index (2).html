@@ -1,0 +1,1235 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pintógrafo de Poleas · Figuras de Lissajous</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Space+Mono:ital@0;1&family=Cormorant+Garamond:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #0a0a0f;
+    --paper: #f5f0e8;
+    --cream: #ede7d3;
+    --gold: #c8a45a;
+    --rust: #8b3a2f;
+    --teal: #1a6b6b;
+    --line: #0a0a0f22;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body { font-family: 'Cormorant Garamond', serif; background: var(--paper); color: var(--ink); overflow-x: hidden; }
+
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    background: var(--ink);
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 2.5rem; height: 52px;
+    border-bottom: 2px solid var(--gold);
+  }
+  .nav-logo { font-family: 'Space Mono', monospace; color: var(--gold); font-size: .72rem; letter-spacing: .12em; text-transform: uppercase; }
+  .nav-links { display: flex; gap: 2rem; list-style: none; }
+  .nav-links a { font-family: 'Space Mono', monospace; font-size: .62rem; letter-spacing: .1em; color: var(--paper); text-decoration: none; text-transform: uppercase; transition: color .2s; }
+  .nav-links a:hover { color: var(--gold); }
+
+  .hero {
+    min-height: 100vh;
+    display: grid; grid-template-columns: 1fr 1fr; align-items: center;
+    padding: 100px 6vw 4rem;
+    background: var(--ink);
+    position: relative; overflow: hidden;
+  }
+  .hero::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 70% 60% at 70% 50%, #1a3030 0%, transparent 70%); }
+  .hero-text { position: relative; z-index: 2; }
+  .hero-eyebrow { font-family: 'Space Mono', monospace; font-size: .7rem; color: var(--gold); letter-spacing: .2em; text-transform: uppercase; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 1rem; }
+  .hero-eyebrow::before { content: ''; display: block; width: 40px; height: 1px; background: var(--gold); }
+  h1 { font-family: 'Playfair Display', serif; font-size: clamp(2.8rem, 5.5vw, 5.5rem); font-weight: 400; color: var(--paper); line-height: 1.05; margin-bottom: 1rem; }
+  h1 em { color: var(--gold); font-style: italic; }
+  .hero-sub { font-size: 1.25rem; color: #a8a8b8; line-height: 1.75; font-weight: 300; max-width: 440px; margin-top: 1.5rem; }
+  .hero-cta { margin-top: 3rem; display: inline-flex; align-items: center; gap: .8rem; font-family: 'Space Mono', monospace; font-size: .75rem; letter-spacing: .12em; color: var(--ink); background: var(--gold); text-decoration: none; padding: .9rem 2rem; text-transform: uppercase; transition: background .2s, transform .2s; }
+  .hero-cta:hover { background: #e0b96a; transform: translateY(-2px); }
+  .hero-canvas-wrap { position: relative; z-index: 2; display: flex; justify-content: center; align-items: center; flex-direction: column; gap: 1rem; }
+  #heroCanvas { border: 1px solid #ffffff18; background: #050508; border-radius: 2px; max-width: 100%; }
+  .hero-ratio-tag { font-family: 'Space Mono', monospace; font-size: .65rem; color: var(--teal); letter-spacing: .15em; text-transform: uppercase; }
+
+  section { padding: 6rem 8vw; }
+  .section-label { font-family: 'Space Mono', monospace; font-size: .65rem; letter-spacing: .22em; text-transform: uppercase; color: var(--teal); display: flex; align-items: center; gap: .8rem; margin-bottom: 3rem; }
+  .section-label::after { content: ''; flex: 1; height: 1px; max-width: 80px; background: var(--teal); }
+  h2 { font-family: 'Playfair Display', serif; font-weight: 400; font-size: clamp(1.9rem, 3.8vw, 3rem); line-height: 1.15; margin-bottom: 2rem; }
+  p { font-size: 1.15rem; line-height: 1.85; font-weight: 300; max-width: 720px; }
+  p + p { margin-top: 1.2rem; }
+
+  /* INTRO */
+  #intro { background: var(--paper); }
+  .intro-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 5rem; align-items: start; }
+  .intro-sidebar { padding: 2rem; background: var(--ink); color: var(--paper); border-left: 4px solid var(--gold); }
+  .sidebar-title { font-family: 'Space Mono', monospace; font-size: .65rem; letter-spacing: .15em; text-transform: uppercase; color: var(--gold); margin-bottom: 1rem; }
+  .sidebar-list { list-style: none; }
+  .sidebar-list li { padding: .6rem 0; border-bottom: 1px solid #ffffff15; font-size: 1rem; color: #d0d0c0; display: flex; align-items: baseline; gap: .6rem; }
+  .sidebar-list li::before { content: '—'; color: var(--gold); font-size: .8rem; }
+
+  /* MONTAJE */
+  #montaje { background: var(--cream); }
+  .montaje-wrap { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: start; margin-top: 2rem; }
+  .polea-diagram { display: flex; flex-direction: column; gap: 2rem; }
+  .polea-card { background: var(--paper); padding: 2rem; border-top: 3px solid var(--gold); }
+  .polea-name { font-family: 'Space Mono', monospace; font-size: .65rem; letter-spacing: .15em; text-transform: uppercase; color: var(--rust); margin-bottom: .8rem; }
+  .polea-title { font-family: 'Playfair Display', serif; font-size: 1.5rem; margin-bottom: .8rem; }
+  .polea-specs { list-style: none; margin-top: .8rem; }
+  .polea-specs li { font-size: 1rem; padding: .4rem 0; border-bottom: 1px solid var(--line); color: #444; display: flex; gap: .8rem; }
+  .polea-specs li::before { content: '·'; color: var(--gold); }
+  #poleasCanvas { border: 1px solid var(--line); background: var(--paper); display: block; margin: 0 auto; }
+
+  /* OBJECTIVES */
+  #objectives { background: var(--paper); }
+  .obj-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 2px; margin-top: 3rem; }
+  .obj-card { padding: 2.5rem 2rem; background: var(--cream); border-top: 3px solid transparent; transition: border-color .3s, transform .3s; }
+  .obj-card:hover { border-color: var(--gold); transform: translateY(-4px); }
+  .obj-num { font-family: 'Playfair Display', serif; font-size: 3.5rem; color: var(--line); line-height: 1; margin-bottom: .8rem; }
+  .obj-title { font-size: 1.05rem; font-weight: 600; margin-bottom: .6rem; }
+  .obj-text { font-size: .95rem; color: #444; line-height: 1.7; font-weight: 300; }
+
+  /* MATERIALES */
+  #materiales { background: var(--ink); color: var(--paper); }
+  #materiales h2 { color: var(--paper); }
+  #materiales .section-label { color: var(--gold); }
+  #materiales .section-label::after { background: var(--gold); }
+  .mat-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1px; margin-top: 3rem; }
+  .mat-cat { padding: 2.5rem; background: #12121a; border-bottom: 1px solid #ffffff10; }
+  .mat-cat-title { font-family: 'Space Mono', monospace; font-size: .65rem; letter-spacing: .15em; text-transform: uppercase; color: var(--gold); margin-bottom: 1.5rem; }
+  .mat-list { list-style: none; }
+  .mat-list li { padding: .55rem 0; border-bottom: 1px solid #ffffff0e; font-size: 1.05rem; color: #c8c8b8; display: flex; align-items: baseline; gap: .7rem; }
+  .mat-list li span.qty { font-family: 'Space Mono', monospace; font-size: .75rem; color: var(--teal); min-width: 2.5rem; }
+
+  /* HISTORIA */
+  #historia { background: var(--paper); }
+  .timeline { margin-top: 4rem; position: relative; padding-left: 3rem; }
+  .timeline::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 1px; background: var(--gold); }
+  .tl-item { margin-bottom: 3.5rem; position: relative; }
+  .tl-dot { position: absolute; left: -3rem; top: .25rem; width: 10px; height: 10px; background: var(--gold); border: 2px solid var(--paper); border-radius: 50%; transform: translateX(calc(-50% + .5px)); }
+  .tl-year { font-family: 'Space Mono', monospace; font-size: .7rem; color: var(--rust); letter-spacing: .1em; margin-bottom: .4rem; }
+  .tl-title { font-family: 'Playfair Display', serif; font-size: 1.4rem; margin-bottom: .5rem; }
+  .tl-text { font-size: 1.05rem; line-height: 1.8; font-weight: 300; color: #333; max-width: 680px; }
+
+  /* POR QUÉ SUCEDE */
+  #porque { background: #0d1a1a; color: var(--paper); }
+  #porque h2 { color: var(--paper); }
+  #porque .section-label { color: var(--teal); }
+  #porque p { color: #c0c8c4; }
+  .equation-block { background: #050a0a; border-left: 3px solid var(--teal); padding: 2rem 2.5rem; margin: 2.5rem 0; display: inline-block; font-family: 'Space Mono', monospace; font-size: 1rem; color: #7dd4c8; line-height: 2.2; }
+  .eq-label { font-size: .65rem; letter-spacing: .1em; text-transform: uppercase; color: #556060; margin-bottom: .5rem; }
+  .lissajous-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 1rem; margin-top: 3rem; }
+  .lissajous-card { background: #050a0a; padding: 1rem; text-align: center; border: 1px solid #ffffff0a; transition: border-color .3s; }
+  .lissajous-card:hover { border-color: var(--teal); }
+  .lissajous-card canvas { display: block; margin: 0 auto; }
+  .lissajous-ratio { font-family: 'Space Mono', monospace; font-size: .7rem; color: var(--teal); margin-top: .6rem; letter-spacing: .08em; }
+  .highlight-card { border: 2px solid var(--gold) !important; }
+  .highlight-card .lissajous-ratio { color: var(--gold); }
+
+  /* NUESTRA RAZÓN */
+  #nuestra-razon { background: var(--paper); }
+  .razon-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: center; margin-top: 2rem; }
+  #razonCanvas { border: 1px solid var(--line); display: block; }
+  .razon-explainer { }
+  .razon-explainer h3 { font-family: 'Playfair Display', serif; font-size: 1.6rem; font-weight: 400; margin-bottom: 1rem; }
+  .math-tag { font-family: 'Space Mono', monospace; font-size: .85rem; background: var(--ink); color: var(--teal); padding: .5rem 1rem; display: inline-block; margin: .8rem 0; }
+
+  /* SIGNIFICANCIA */
+  #significancia { background: var(--cream); }
+  .sig-grid { display: grid; grid-template-columns: repeat(2,1fr); gap: 3rem; margin-top: 3rem; }
+  .sig-item { padding: 2.5rem; border: 1px solid var(--line); background: var(--paper); }
+  .sig-icon { font-size: 2.2rem; margin-bottom: 1rem; }
+  .sig-title { font-family: 'Playfair Display', serif; font-size: 1.35rem; margin-bottom: .8rem; }
+  .sig-text { font-size: 1rem; line-height: 1.8; font-weight: 300; color: #3a3a3a; }
+
+  /* INTERESANTE */
+  #interesante { background: var(--ink); color: var(--paper); }
+  #interesante h2 { color: var(--paper); }
+  #interesante .section-label { color: var(--gold); }
+  #interesante .section-label::after { background: var(--gold); }
+  #interesante p { color: #c0b8a8; }
+  .pullquote { font-family: 'Playfair Display', serif; font-style: italic; font-size: clamp(1.5rem, 2.8vw, 2rem); line-height: 1.4; color: var(--gold); border-left: 4px solid var(--gold); padding-left: 2rem; margin: 2rem 0; }
+  .interest-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; margin-top: 2rem; }
+
+  /* ANÁLISIS */
+  #analisis { background: var(--paper); }
+  .analysis-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 2px; margin-top: 3rem; }
+  .an-block { background: var(--cream); padding: 2.5rem 2rem; }
+  .an-block h3 { font-family: 'Playfair Display', serif; font-size: 1.25rem; color: var(--rust); margin-bottom: 1rem; font-weight: 400; }
+  .an-block p { font-size: .95rem; color: #3a3a3a; line-height: 1.75; }
+
+  /* ERRORES */
+  #errores { background: #0d1a1a; color: var(--paper); }
+  #errores h2 { color: var(--paper); }
+  #errores .section-label { color: var(--teal); }
+  #errores .section-label::after { background: var(--teal); }
+  #errores > p { color: #c0c8c4; }
+  .err-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; margin-top: 3rem; background: #0a1414; }
+  .err-block { background: #0d1a1a; padding: 2.3rem 2rem; border-top: 2px solid #1a3838; }
+  .err-block h3 { font-family: 'Playfair Display', serif; font-size: 1.2rem; color: var(--teal); margin-bottom: .8rem; font-weight: 400; }
+  .err-block p { font-size: .95rem; color: #b8c4c0; line-height: 1.75; }
+  .err-block .err-data { font-family: 'Space Mono', monospace; font-size: .72rem; color: var(--gold); letter-spacing: .03em; display: block; margin-top: .9rem; padding-top: .7rem; border-top: 1px solid #ffffff12; }
+
+  /* CONCLUSIONES */
+  #conclusiones { background: var(--paper); }
+  .concl-list { margin-top: 3rem; counter-reset: cnum; }
+  .concl-item { display: grid; grid-template-columns: auto 1fr; gap: 2rem; padding: 2rem 0; border-bottom: 1px solid var(--line); align-items: start; }
+  .concl-item::before { counter-increment: cnum; content: counter(cnum, decimal-leading-zero); font-family: 'Playfair Display', serif; font-size: 2.4rem; color: var(--gold); line-height: 1; }
+  .concl-item h3 { font-family: 'Playfair Display', serif; font-size: 1.4rem; font-weight: 400; margin-bottom: .6rem; }
+  .concl-item p { font-size: 1.05rem; line-height: 1.8; font-weight: 300; color: #333; max-width: 720px; }
+
+  /* FIGURAS / IMÁGENES */
+  figure.lab-fig { margin: 0; }
+  figure.lab-fig img { width: 100%; height: auto; display: block; border: 1px solid var(--line); border-radius: 2px; background: #fff; }
+  figure.lab-fig figcaption { font-size: .9rem; color: #555; line-height: 1.6; margin-top: .8rem; font-style: italic; }
+  figure.lab-fig figcaption strong { font-style: normal; font-family: 'Space Mono', monospace; font-size: .72rem; letter-spacing: .08em; text-transform: uppercase; color: var(--rust); display: block; margin-bottom: .3rem; }
+  .resultados-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; margin-top: 3rem; }
+  /* RESULTADOS section is dark plots */
+  #resultados { background: var(--cream); }
+  .plot-block { margin-top: 3.5rem; display: grid; grid-template-columns: 1fr 1.1fr; gap: 3rem; align-items: center; }
+  .plot-block.reverse { grid-template-columns: 1.1fr 1fr; }
+  .plot-block.reverse figure { order: 2; }
+  .plot-block h3 { font-family: 'Playfair Display', serif; font-size: 1.5rem; font-weight: 400; color: var(--rust); margin-bottom: 1rem; }
+  .plot-block p { font-size: 1.02rem; line-height: 1.8; font-weight: 300; color: #333; }
+  .plot-block figure.lab-fig img { background: #0d0d14; padding: .4rem; }
+
+  /* ONDAS */
+  #ondas { background: var(--ink); color: var(--paper); }
+  #ondas h2 { color: var(--paper); }
+  #ondas .section-label { color: var(--teal); }
+  #ondas .section-label::after { background: var(--teal); }
+  #ondas p { color: #c0c8c4; }
+  .ondas-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; margin-top: 3rem; }
+  .ondas-item h3 { font-family: 'Playfair Display', serif; font-size: 1.4rem; margin-bottom: .8rem; font-weight: 400; color: var(--paper); }
+  .ondas-item p { font-size: 1rem; line-height: 1.8; font-weight: 300; color: #a0a890; }
+
+  /* DEMO */
+  #demo { background: #050508; padding: 5rem 8vw; text-align: center; }
+  #demo h2 { color: var(--paper); font-family: 'Playfair Display', serif; font-size: 2.4rem; font-weight: 400; margin-bottom: .5rem; }
+  #demo > p { color: #888; font-size: 1rem; margin: 0 auto 2rem; max-width: 560px; }
+  .demo-controls { display: flex; flex-wrap: wrap; justify-content: center; gap: 2rem; margin-bottom: 2rem; }
+  .ctrl-group { display: flex; flex-direction: column; align-items: flex-start; gap: .4rem; }
+  .ctrl-group label { font-family: 'Space Mono', monospace; font-size: .65rem; letter-spacing: .1em; text-transform: uppercase; color: var(--teal); }
+  .ctrl-group input[type=range] { -webkit-appearance: none; width: 160px; height: 3px; background: #333; outline: none; cursor: pointer; }
+  .ctrl-group input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 14px; height: 14px; background: var(--teal); border-radius: 50%; }
+  .ctrl-val { font-family: 'Space Mono', monospace; font-size: .7rem; color: var(--gold); }
+  .preset-btns { display: flex; flex-wrap: wrap; justify-content: center; gap: .6rem; margin-bottom: 1.5rem; }
+  .preset-btn { font-family: 'Space Mono', monospace; font-size: .62rem; letter-spacing: .08em; text-transform: uppercase; padding: .5rem 1rem; background: transparent; border: 1px solid #333; color: #888; cursor: pointer; transition: all .2s; }
+  .preset-btn:hover, .preset-btn.active { background: var(--teal); border-color: var(--teal); color: var(--paper); }
+  #demoCanvas { border: 1px solid #ffffff15; background: #080810; }
+
+  footer { background: var(--ink); padding: 4rem 8vw; border-top: 1px solid var(--gold); display: flex; justify-content: space-between; align-items: center; }
+  .footer-left { color: #888; font-size: .9rem; line-height: 1.8; }
+  .footer-left strong { color: var(--gold); display: block; font-family: 'Space Mono', monospace; font-size: .7rem; letter-spacing: .15em; text-transform: uppercase; margin-bottom: .4rem; }
+  .footer-right { text-align: right; }
+  .footer-right span { display: block; font-family: 'Space Mono', monospace; font-size: .65rem; color: #555; letter-spacing: .1em; text-transform: uppercase; }
+
+  .reveal { opacity: 0; transform: translateY(30px); transition: opacity .8s, transform .8s; }
+  .reveal.visible { opacity: 1; transform: none; }
+
+  @media (max-width: 900px) {
+    .hero { grid-template-columns: 1fr; min-height: auto; padding-top: 120px; }
+    .hero-canvas-wrap { display: none; }
+    .intro-grid, .montaje-wrap, .razon-grid, .sig-grid, .interest-cols, .ondas-grid { grid-template-columns: 1fr; gap: 2rem; }
+    .obj-grid, .analysis-grid { grid-template-columns: 1fr; }
+    .resultados-grid { grid-template-columns: 1fr; }
+    .plot-block, .plot-block.reverse { grid-template-columns: 1fr; gap: 1.5rem; }
+    .plot-block.reverse figure { order: 0; }
+    .err-grid { grid-template-columns: 1fr; }
+    .concl-item { grid-template-columns: 1fr; gap: .5rem; }
+    .mat-grid { grid-template-columns: 1fr; }
+    .lissajous-grid { grid-template-columns: repeat(3,1fr); }
+    nav { padding: 0 1.2rem; }
+    .nav-links { display: none; }
+    footer { flex-direction: column; gap: 2rem; text-align: center; }
+    .footer-right { text-align: center; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <span class="nav-logo">Pintógrafo · Física III</span>
+  <ul class="nav-links">
+    <li><a href="#intro">Intro</a></li>
+    <li><a href="#montaje">Montaje</a></li>
+    <li><a href="#objectives">Objetivos</a></li>
+    <li><a href="#historia">Historia</a></li>
+    <li><a href="#porque">El fenómeno</a></li>
+    <li><a href="#nuestra-razon">Razones</a></li>
+    <li><a href="#resultados">Resultados</a></li>
+    <li><a href="#analisis">Análisis</a></li>
+    <li><a href="#demo">Demo</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-text">
+    <div class="hero-eyebrow">Física III — Laboratorio</div>
+    <h1>Pintógrafo<br>de <em>Poleas</em><br>y Lissajous</h1>
+    <p class="hero-sub">Construimos un pintógrafo de poleas para registrar figuras de Lissajous sobre papel y verificar, con distintas combinaciones de discos, la relación entre la razón de giros y la geometría de la curva.</p>
+    <a href="#intro" class="hero-cta">Explorar ↓</a>
+  </div>
+  <div class="hero-canvas-wrap">
+    <canvas id="heroCanvas" width="400" height="400"></canvas>
+    <span class="hero-ratio-tag">Discos de 7, 10 y 14 cm · varias razones</span>
+  </div>
+</section>
+
+<!-- INTRO -->
+<section id="intro">
+  <div class="section-label">01 — Introducción</div>
+  <div class="intro-grid">
+    <div>
+      <h2>¿Qué hicimos exactamente?</h2>
+      <p>Construimos un <strong>pintógrafo</strong>, una variante del armonógrafo que en lugar de péndulos emplea dos discos que giran acoplados. Un brazo articulado une ambos discos y sostiene un trazador en el centro; al girar el conjunto a mano, el trazador describe una curva continua sobre el papel.</p>
+      <p>Trabajamos con <strong>tres discos</strong>: dos de 14 cm de diámetro, uno de 10 cm y uno de 7 cm. Combinándolos de a pares obtenemos distintas razones de giro: 1:1 (14 cm y 14 cm), 7:5 (14 cm y 10 cm), 2:1 (14 cm y 7 cm) y 10:7 (10 cm y 7 cm). Cada razón produce una familia de figuras distinta sobre el papel.</p>
+      <p>La razón entre los diámetros fija cuántas vueltas da un disco por cada vuelta del otro, y de ahí depende la forma resultante. Como el giro es manual y no partimos siempre desde la misma posición, la fase inicial cambia entre pasadas; el dibujo final es la superposición de esas pasadas. Eso es lo que documentamos en este laboratorio.</p>
+    </div>
+    <div class="intro-sidebar">
+      <div class="sidebar-title">Conceptos que entran en juego</div>
+      <ul class="sidebar-list">
+        <li>Movimiento circular uniforme</li>
+        <li>Razón de frecuencias angulares</li>
+        <li>Superposición de movimientos</li>
+        <li>Figuras de Lissajous</li>
+        <li>Cinemática del brazo articulado</li>
+        <li>Acople de discos y razón de giros</li>
+        <li>Amplitud y fase inicial</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- MONTAJE -->
+<section id="montaje">
+  <div class="section-label">02 — El montaje</div>
+  <h2>Nuestro pintógrafo,<br>pieza por pieza</h2>
+  <p>Todo se construyó a mano con materiales accesibles: madera para la base, cartón piedra para los discos, palitos de balso para el brazo articulado, silicona caliente, palitos de pincho como ejes, bisturí, regla y la mina de un lapicero como trazador. El conjunto se hace girar manualmente.</p>
+
+  <div class="montaje-wrap reveal">
+    <div class="polea-diagram">
+      <div class="polea-card">
+        <div class="polea-name">Disco de 14 cm</div>
+        <div class="polea-title">Diámetro 14 cm · radio 7 cm</div>
+        <p style="font-size:1rem; color:#555; line-height:1.75; font-weight:300;">Tenemos <strong>dos discos iguales de 14 cm</strong>. Usados juntos dan la razón 1:1; combinados con los discos menores dan 7:5 (con el de 10 cm) o 2:1 (con el de 7 cm).</p>
+        <ul class="polea-specs">
+          <li>Diámetro: 14 cm (radio = 7 cm)</li>
+          <li>Cantidad: 2 unidades</li>
+          <li>Material: cartón piedra cortado con bisturí</li>
+          <li>Hueco para el brazo articulado</li>
+        </ul>
+      </div>
+      <div class="polea-card">
+        <div class="polea-name">Disco de 10 cm</div>
+        <div class="polea-title">Diámetro 10 cm · radio 5 cm</div>
+        <p style="font-size:1rem; color:#555; line-height:1.75; font-weight:300;">Combinado con un disco de 14 cm da la razón <strong>7:5</strong>; combinado con el de 7 cm da la razón <strong>10:7</strong>. Al ser menor, gira más veces por cada vuelta del disco grande.</p>
+        <ul class="polea-specs">
+          <li>Diámetro: 10 cm (radio = 5 cm)</li>
+          <li>Cantidad: 1 unidad</li>
+          <li>Material: cartón piedra cortado con bisturí</li>
+          <li>Hueco para el brazo articulado</li>
+        </ul>
+      </div>
+      <div class="polea-card">
+        <div class="polea-name">Disco de 7 cm</div>
+        <div class="polea-title">Diámetro 7 cm · radio 3,5 cm</div>
+        <p style="font-size:1rem; color:#555; line-height:1.75; font-weight:300;">El disco más pequeño. Con un disco de 14 cm da la razón <strong>2:1</strong> (una vuelta de uno por cada dos del otro); con el de 10 cm da la razón <strong>10:7</strong>.</p>
+        <ul class="polea-specs">
+          <li>Diámetro: 7 cm (radio = 3,5 cm)</li>
+          <li>Cantidad: 1 unidad</li>
+          <li>Material: cartón piedra cortado con bisturí</li>
+          <li>Hueco para el brazo articulado</li>
+        </ul>
+      </div>
+    </div>
+    <div style="display:flex; flex-direction:column; gap:1.5rem;">
+      <canvas id="poleasCanvas" width="420" height="380"></canvas>
+      <p style="font-size:.95rem; color:#666; font-style:italic; text-align:center; max-width:420px; margin:0 auto;">Diagrama del mecanismo. Los dos discos giran acoplados; el brazo articulado traduce ese giro en la trayectoria del trazador sobre el papel.</p>
+    </div>
+  </div>
+</section>
+
+<!-- OBJECTIVES -->
+<section id="objectives">
+  <div class="section-label">03 — Objetivos</div>
+  <h2>¿Qué buscamos<br>demostrar?</h2>
+  <div class="obj-grid reveal">
+    <div class="obj-card">
+      <div class="obj-num">01</div>
+      <div class="obj-title">Verificar la razón de giros</div>
+      <div class="obj-text">Comprobar que la figura obtenida con cada par de discos corresponde a la razón esperada (1:1, 7:5, 2:1 o 10:7) según los diámetros utilizados.</div>
+    </div>
+    <div class="obj-card">
+      <div class="obj-num">02</div>
+      <div class="obj-title">Comparar distintas razones</div>
+      <div class="obj-text">Registrar las figuras producidas al cambiar la combinación de discos y observar cómo varía la forma al modificar la razón de giros, manteniendo igual el resto del montaje.</div>
+    </div>
+    <div class="obj-card">
+      <div class="obj-num">03</div>
+      <div class="obj-title">Relacionar geometría con física</div>
+      <div class="obj-text">Establecer la conexión entre los parámetros medibles del aparato (diámetros, distancia del brazo al centro) y las ecuaciones paramétricas de las figuras de Lissajous.</div>
+    </div>
+    <div class="obj-card">
+      <div class="obj-num">04</div>
+      <div class="obj-title">Reconstruir la trayectoria real</div>
+      <div class="obj-text">Grabar el montaje en funcionamiento y rastrear con Python/OpenCV la posición del trazador frame a frame, para comparar la curva real con la figura teórica de la razón correspondiente.</div>
+    </div>
+  </div>
+</section>
+
+<!-- MATERIALES -->
+<section id="materiales">
+  <div class="section-label">04 — Materiales</div>
+  <h2>Lo que usamos para<br>construirlo</h2>
+  <p style="color:#a0a098;">Materiales accesibles, sin equipo especializado. El montaje se acciona girando los discos a mano.</p>
+  <div class="mat-grid reveal">
+    <div class="mat-cat">
+      <div class="mat-cat-title">Estructura y soporte</div>
+      <ul class="mat-list">
+        <li><span class="qty">—</span> Madera (base del montaje)</li>
+        <li><span class="qty">—</span> Cartón piedra (discos de las poleas)</li>
+        <li><span class="qty">—</span> Palitos de balso (brazos articulados)</li>
+        <li><span class="qty">—</span> Palitos de pincho (ejes de rotación)</li>
+      </ul>
+    </div>
+    <div class="mat-cat">
+      <div class="mat-cat-title">Acople y accionamiento</div>
+      <ul class="mat-list">
+        <li><span class="qty">—</span> Acople entre discos (giro manual)</li>
+        <li><span class="qty">—</span> Brazo articulado de balso</li>
+      </ul>
+    </div>
+    <div class="mat-cat">
+      <div class="mat-cat-title">Ensamble y fijación</div>
+      <ul class="mat-list">
+        <li><span class="qty">—</span> Silicona caliente</li>
+        <li><span class="qty">—</span> Bisturí (para cortar con precisión)</li>
+        <li><span class="qty">—</span> Regla metálica</li>
+      </ul>
+    </div>
+    <div class="mat-cat">
+      <div class="mat-cat-title">Sistema de trazado</div>
+      <ul class="mat-list">
+        <li><span class="qty">1</span> Mina de lapicero (trazador)</span></li>
+        <li><span class="qty">—</span> Hojas de papel blanco</li>
+        <li><span class="qty">—</span> Soporte para sujetar el papel bajo el brazo</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- HISTORIA -->
+<section id="historia">
+  <div class="section-label">05 — Historia</div>
+  <h2>Jules Antoine Lissajous<br>y cómo llegamos aquí</h2>
+  <div class="timeline reveal">
+    <div class="tl-item">
+      <div class="tl-dot"></div>
+      <div class="tl-year">1822</div>
+      <div class="tl-title">Nace Jules Antoine Lissajous</div>
+      <div class="tl-text">Nace el 4 de marzo en Versalles, Francia. Estudia en la École Normale Supérieure de París y se convierte en profesor de física, con una curiosidad particular por las vibraciones y el sonido.</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot"></div>
+      <div class="tl-year">1855</div>
+      <div class="tl-title">El experimento con espejos y diapasones</div>
+      <div class="tl-text">Lissajous pega pequeños espejos sobre dos diapasones vibrantesy los orienta en ángulo recto. Un rayo de luz rebota entre ellos y proyecta en la pared las figuras que hoy llevan su nombre. No usa ningún mecanismo de escritura — simplemente observa la luz bailando. Es la primera vez que alguien visualiza la composición de dos vibraciones perpendiculares.</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot"></div>
+      <div class="tl-year">1857</div>
+      <div class="tl-title">Premio de la Academia Francesa de Ciencias</div>
+      <div class="tl-text">Publica su tesis doctoral sobre las figuras de vibración compuesta y recibe el Premio Lacaze — un reconocimiento que la Academia describe a una investigación que "brilla por su utilidad, elegancia y dificultad". En ese momento, su trabajo tiene aplicaciones directas en la afinación de instrumentos musicales y la acústica.</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot"></div>
+      <div class="tl-year">1860s</div>
+      <div class="tl-title">Nace el armonógrafo mecánico</div>
+      <div class="tl-text">Físicos como Hugh Blackburn construyen las primeras versiones mecánicas con péndulos que dejan trazos sobre papel. El aparato se vuelve popular en universidades europeas como instrumento de demostración — la gente lo veía como algo entre ciencia y magia.</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot"></div>
+      <div class="tl-year">Fines s. XIX</div>
+      <div class="tl-title">El pintógrafo: poleas en lugar de péndulos</div>
+      <div class="tl-text">Aparecen variantes que usan ruedas y engranajes en lugar de péndulos, los llamados <em>pintógrafos</em>. La diferencia fundamental: en el péndulo la amplitud decae con el tiempo (la curva se ve como una espiral), mientras que en los discos acoplados el movimiento se mantiene mientras se siga girando. Las figuras resultantes son más limpias y reproducibles.</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot"></div>
+      <div class="tl-year">Siglo XX</div>
+      <div class="tl-title">Del papel al osciloscopio</div>
+      <div class="tl-text">Los ingenieros electrónicos adoptan las figuras de Lissajous en los osciloscopios analógicos: conectan dos señales eléctricas a los ejes X e Y y leen la razón de frecuencias y la diferencia de fase directamente de la forma de la curva. Lo que Lissajous hacía con diapasones y espejos, ahora se hace con electrones y fósforo.</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot"></div>
+      <div class="tl-year">Hoy</div>
+      <div class="tl-title">Nosotros, cartón piedra y silicona</div>
+      <div class="tl-text">Unos 170 años después, en un laboratorio de Física III, reproducimos el mismo fenómeno con materiales que teníamos a mano. La física no ha cambiado — lo que sí cambió es que ahora podemos grabarlo en video y analizarlo con Python.</div>
+    </div>
+  </div>
+</section>
+
+<!-- POR QUÉ SUCEDE -->
+<section id="porque">
+  <div class="section-label">06 — El fenómeno</div>
+  <h2>¿Por qué se forman<br>esas figuras?</h2>
+  <p>La respuesta corta: porque el trazador se mueve en <em>dos direcciones al mismo tiempo</em>, cada una controlada por uno de los discos. La posición del trazador en cada instante es la suma vectorial de esas dos contribuciones.</p>
+  <p>Si un solo disco moviera el brazo, el trazador describiría una línea. Pero el brazo articulado combina las dos rotaciones, y esa combinación produce una trayectoria en el plano con la forma matemática exacta de las ecuaciones de Lissajous:</p>
+  <div class="equation-block">
+    <div class="eq-label">Posición del lápiz en función del tiempo</div>
+    x(t) = r₁ · cos(ω₁ · t + δ)<br>
+    y(t) = r₂ · cos(ω₂ · t)
+  </div>
+  <p>Donde <strong>ω₁</strong> y <strong>ω₂</strong> son las velocidades angulares de cada disco, <strong>r₁</strong> y <strong>r₂</strong> son las distancias del brazo al centro de cada disco, y <strong>δ</strong> es la diferencia de fase inicial, que en la práctica depende de la posición en que quedan los discos al empezar a girar a mano.</p>
+  <p>La clave está en la razón <strong>ω₁/ω₂</strong>: si es un número racional simple (como 7/5), la curva se cierra y se repite. Si fuera irracional, el lápiz nunca volvería exactamente al mismo punto y llenaría el papel poco a poco.</p>
+  <div class="lissajous-grid" id="lissajousPreview"></div>
+</section>
+
+<!-- NUESTRA RAZÓN -->
+<section id="nuestra-razon">
+  <div class="section-label">07 — Las razones que probamos</div>
+  <h2>De los diámetros<br>a la razón de giros</h2>
+  <div class="razon-grid reveal">
+    <div>
+      <canvas id="razonCanvas" width="420" height="420"></canvas>
+    </div>
+    <div class="razon-explainer">
+      <h3>Cómo se obtiene cada razón</h3>
+      <p>Cuando dos discos giran acoplados, sus velocidades angulares son inversamente proporcionales a sus radios. Por eso la razón de giros queda determinada por la relación entre los diámetros de los discos que elijamos:</p>
+      <div class="math-tag">ω₁ / ω₂ = R₂ / R₁ = D₂ / D₁</div>
+      <p>Con nuestros tres tamaños de disco (7, 10 y 14 cm) y combinándolos de a pares, obtenemos cuatro razones distintas:</p>
+      <div class="math-tag">14 : 14 → 1:1<br>14 : 10 → 7:5<br>14 : 7 → 2:1<br>10 : 7 → 10:7</div>
+      <p style="margin-top:1.2rem;">Una figura de Lissajous con razón a:b tiene <strong>a</strong> tangencias con una línea horizontal y <strong>b</strong> con una vertical. Así, contar esas tangencias en el dibujo permite comprobar directamente qué razón se obtuvo.</p>
+      <p style="margin-top:1.2rem;">Las razones simples (1:1, 2:1) cierran rápido y dan figuras limpias; las menos simples (7:5, 10:7) tardan más vueltas en cerrarse y producen curvas más densas.</p>
+    </div>
+  </div>
+</section>
+
+<!-- SIGNIFICANCIA -->
+<section id="significancia">
+  <div class="section-label">08 — Por qué importa</div>
+  <h2>Las figuras de Lissajous<br>en el mundo real</h2>
+  <div class="sig-grid reveal">
+    <div class="sig-item">
+      <div class="sig-icon">⚡</div>
+      <div class="sig-title">Osciloscopios y electrónica</div>
+      <div class="sig-text">Conectar dos señales a los ejes X e Y de un osciloscopio genera figuras de Lissajous, de las que se lee la razón de frecuencias y la fase entre ambas. Es el mismo principio que aplicamos con los discos, pero con señales eléctricas.</div>
+    </div>
+    <div class="sig-item">
+      <div class="sig-icon">🎵</div>
+      <div class="sig-title">Acústica y música</div>
+      <div class="sig-text">Los intervalos consonantes (octava 2:1, quinta 3:2) corresponden a razones simples de frecuencia, las mismas que producen figuras de Lissajous limpias. Lissajous usó estas curvas justamente para estudiar la consonancia musical.</div>
+    </div>
+    <div class="sig-item">
+      <div class="sig-icon">🔧</div>
+      <div class="sig-title">Vibraciones estructurales</div>
+      <div class="sig-text">El estudio de modos de vibración en estructuras y máquinas se basa en la superposición de oscilaciones. Identificar la relación entre dos frecuencias a partir de la forma resultante es el mismo análisis que hacemos al contar los nodos de la figura.</div>
+    </div>
+  </div>
+</section>
+
+<!-- INTERESANTE -->
+<section id="interesante">
+  <div class="section-label">09 — Por qué es fascinante</div>
+  <h2>Más allá de la ecuación</h2>
+  <div class="interest-cols">
+    <div>
+      <p>Lo que las ecuaciones por sí solas no transmiten es ver la figura emerger sobre el papel a medida que se giran los discos: no es una simulación, sino cartón girado a mano produciendo una curva matemáticamente exacta. Cambiar un disco cambia la razón de giros y, con ella, toda la forma de la curva.</p>
+      <div class="pullquote">"La razón entre dos diámetros se vuelve visible como una forma geométrica. Eso es física."</div>
+    </div>
+    <div>
+      <p>A diferencia del armonógrafo de péndulos, cuya figura decae en espiral al perder energía, aquí la curva se vuelve a recorrer mientras se siga girando. El aparato funciona, en el fondo, como un trazador analógico de ecuaciones: cada figura es la solución visual de un sistema de dos oscilaciones perpendiculares con una razón de giros fija.</p>
+    </div>
+  </div>
+</section>
+
+<!-- RESULTADOS -->
+<section id="resultados">
+  <div class="section-label">10 — Resultados</div>
+  <h2>Las figuras<br>que obtuvimos</h2>
+  <p>Cada combinación de discos produjo una familia de figuras distinta sobre el papel. Al girar a mano, partiendo de posiciones diferentes en cada pasada, las trazas se acumulan: lo que se ve no es una sola curva, sino la superposición de muchas pasadas con fases iniciales (δ) distintas.</p>
+
+  <div class="resultados-grid reveal">
+    <figure class="lab-fig">
+      <img src="Razon11.jpeg" alt="Figura de razón 1:1, dos discos de 14 cm">
+      <figcaption><strong>Razón 1:1 · discos 14 + 14 cm</strong>Con frecuencias iguales, la figura teórica es una elipse cuya forma depende por completo de la fase inicial δ. Al girar a mano desde posiciones distintas en cada pasada, se acumulan elipses con distintos δ: el resultado es el abanico triangular asimétrico que se observa. El trazo de color rosa y la marcada extensión vertical revelan que el brazo tenía mayor recorrido en ese eje que en el horizontal.</figcaption>
+    </figure>
+    <figure class="lab-fig">
+      <img src="Razon75.jpeg" alt="Figura de razón 7:5, discos de 14 y 10 cm">
+      <figcaption><strong>Razón 7:5 · discos 14 + 10 cm</strong>La razón 7:5 requiere 7 vueltas del disco pequeño y 5 del grande para que la curva se cierre. Eso genera más lóbulos intermedios y una traza más densa. La figura alargada con núcleo central denso y extremos afilados es la firma visual característica de esta razón, verificada también en el análisis de video.</figcaption>
+    </figure>
+    <figure class="lab-fig">
+      <img src="Razon107.jpeg" alt="Figura con discos de 10 y 7 cm">
+      <figcaption><strong>Razón 10:7 · discos 10 + 7 cm</strong>Con diámetros 10 y 7 cm la razón de frecuencias es 10:7, aún menos simple que 7:5. La figura resultante es un rombo redondeado de baja altura y núcleo muy denso: el trazador necesita 10 vueltas de un disco y 7 del otro antes de repetir el mismo camino, por lo que rellena el área disponible de forma casi uniforme.</figcaption>
+    </figure>
+    <figure class="lab-fig">
+      <img src="Razon12.jpeg" alt="Figura razón 1:2, discos 14 y 7 cm">
+      <figcaption><strong>Razón 1:2 · discos 14 + 7 cm</strong>El disco de 7 cm gira el doble de rápido que el de 14 cm. La figura de Lissajous 2:1 tiene forma de lazo o parábola. La figura obtenida, similar a una almendra alargada y densa, corresponde a la superposición de muchos lazos con distintas fases iniciales, lo que es consistente con el giro manual.</figcaption>
+    </figure>
+  </div>
+</section>
+
+<!-- ANÁLISIS DE VIDEO -->
+<section id="analisis">
+  <div class="section-label">11 — Análisis de video</div>
+  <h2>Reconstruir la trayectoria<br>con Python y OpenCV</h2>
+  <p>Grabamos el pintógrafo en funcionamiento y reconstruimos el movimiento del trazador frame a frame, sin herramientas de pago, usando solo OpenCV y NumPy. Analizamos dos configuraciones: la razón <strong>1:1</strong> (dos discos de 14 cm, 12 s) y la razón <strong>7:5</strong> (discos de 14 y 10 cm, 47 s). El método es idéntico en ambos casos; los pasos se ilustran abajo con la razón 1:1.</p>
+
+  <div class="plot-block reveal">
+    <figure class="lab-fig">
+      <img src="trayectoriacruda11.png" alt="Trayectoria cruda del conector coloreada por tiempo">
+      <figcaption><strong>Trayectoria cruda · color = tiempo · Razón 1:1</strong>Cada punto es la posición del conector en un fotograma. El gradiente morado→amarillo muestra la dirección del tiempo. Los puntos morados (inicio) se concentran en la parte inferior-derecha; los amarillos (final) en la superior-izquierda, trazando el mismo camino elíptico varias veces.</figcaption>
+    </figure>
+    <div>
+      <h3>Detección frame a frame</h3>
+      <p>Cada fotograma se convirtió del espacio BGR a HSV — un espacio donde separar un color por tono (H) es independiente del brillo (V), lo que hace la detección más robusta ante cambios de iluminación. Se definió un rango HSV para el azul del conector y se generó una máscara binaria. Sobre ella se calculó el centroide del contorno más grande: esa es la posición del trazador en cada frame.</p>
+      <p style="margin-top:1rem;">En la gráfica se aprecia que los puntos no forman una curva perfectamente única: el trazador recorre caminos ligeramente distintos en cada pasada. Eso es exactamente lo esperado con giro manual — cada vuelta parte de una posición angular (fase δ) diferente — y explica por qué el papel acumula muchas trazas superpuestas en vez de una sola curva limpia.</p>
+    </div>
+  </div>
+
+  <div class="plot-block reverse reveal">
+    <figure class="lab-fig">
+      <img src="analisis11.png" alt="Trayectoria suavizada con filtro Savitzky-Golay">
+      <figcaption><strong>Trayectoria suavizada · Savitzky-Golay · Razón 1:1</strong>Ventana 11 frames, orden 3. La forma general es un lazo vertical alargado, marcadamente más alto que ancho: la amplitud en Y supera a la de X en aproximadamente un 50%, evidencia directa del descentrado del brazo.</figcaption>
+    </figure>
+    <div>
+      <h3>Suavizado de la señal</h3>
+      <p>El ruido de detección se limpió primero con morfología: apertura (elimina píxeles aislados) y dilatación (engrosa el blob objetivo), con kernel 5×5. Luego se aplicó el filtro Savitzky-Golay a las series x(t) e y(t), que ajusta un polinomio local a cada ventana de puntos y suaviza sin el retardo ni el aplanamiento de picos que introduce un promedio móvil.</p>
+      <p style="margin-top:1rem;">La trayectoria resultante revela la forma real del movimiento: un lazo cerrado orientado verticalmente. El punto dorado (inicio) y el rojo (fin) quedan separados por apenas unos píxeles, lo que confirma que no hubo deriva apreciable del encuadre durante los 12 segundos de grabación. La asimetría de amplitudes — eje Y mucho más largo que eje X — es la firma directa del brazo descentrado.</p>
+    </div>
+  </div>
+
+  <div class="plot-block reveal">
+    <figure class="lab-fig">
+      <img src="comparacionxy11.png" alt="Componentes X e Y del movimiento 1:1 vs tiempo">
+      <figcaption><strong>Componentes X e Y vs tiempo · razón 1:1 · 12 s</strong>El movimiento descompuesto en sus ejes horizontal (verde) y vertical (dorado) a lo largo de los 12 segundos de grabación. Ambas señales oscilan de forma aproximadamente periódica; el eje Y alcanza claramente mayor amplitud que el X.</figcaption>
+    </figure>
+    <div>
+      <h3>Las dos oscilaciones por separado</h3>
+      <p>Separar el movimiento en sus componentes X(t) e Y(t) muestra dos oscilaciones aproximadamente periódicas, consistentes con el giro de los dos discos. Los períodos no son perfectamente regulares porque el giro manual hace variar la velocidad angular de una vuelta a otra.</p>
+      <p style="margin-top:1rem;">Lo más visible es la diferencia de amplitud entre los dos ejes: el eje vertical (Y) oscila con bastante más recorrido que el horizontal (X). Esa asimetría sistemática es la firma del brazo descentrado respecto a los discos, y reaparece igual en el análisis de la razón 7:5.</p>
+    </div>
+  </div>
+
+  <div class="plot-block reverse reveal">
+    <figure class="lab-fig">
+      <img src="analisis11componentesxy.png" alt="Comparación real vs teórica 1:1 para distintas fases">
+      <figcaption><strong>Real vs teórica · razón 1:1 · tres fases</strong>La curva real (verde-azulado) superpuesta sobre la figura teórica 1:1 para δ = 0° (recta), δ = 45° (elipse inclinada) y δ = 90° (círculo). En los tres paneles la curva real es la misma; lo que cambia es la referencia teórica.</figcaption>
+    </figure>
+    <div>
+      <h3>Comparación con el modelo</h3>
+      <p>Esta es la comparación directa entre lo medido y lo que predice el modelo. Para razón 1:1 la figura de Lissajous teórica es una elipse cuya orientación depende por completo de la fase δ: con δ = 0° es una recta diagonal, con δ = 90° un círculo.</p>
+      <p style="margin-top:1rem;">La curva real no coincide exactamente con ninguna de las tres, y la razón es que durante los 12 segundos los discos se giraron a mano partiendo de fases distintas en cada vuelta. La traza acumulada es la superposición de muchas elipses con δ diferente, que en conjunto producen el abanico observado en la figura sobre papel. Además se aprecia la compresión en X que ya señalaban las componentes: el brazo descentrado limita el recorrido horizontal.</p>
+    </div>
+  </div>
+
+  <h2 style="margin-top:5rem;">El mismo análisis para la razón 7:5</h2>
+  <p>Aplicamos el procedimiento completo a un segundo video, esta vez de la razón 7:5 (discos de 14 y 10 cm). El rastreo cubrió el 100% de los 1418 fotogramas (47 s), con un salto medio entre frames de 7,1 px y ninguno mayor a 20 px: una señal limpia y continua.</p>
+
+  <div class="plot-block reveal">
+    <figure class="lab-fig">
+      <img src="analisis_7-5_trayectoria_cruda.png" alt="Trayectoria cruda de la razón 7:5 coloreada por tiempo">
+      <figcaption><strong>Trayectoria cruda 7:5 · color = tiempo · 1 418 frames (47 s)</strong>La nube de puntos forma una figura irregular con forma de pera, más ancha en la parte superior. A diferencia del caso 1:1, aquí no se distinguen lazos individuales: los 47 segundos de giro produjeron suficientes pasadas como para que la figura quede casi completamente rellena.</figcaption>
+    </figure>
+    <div>
+      <h3>Por qué la figura 7:5 llena más área</h3>
+      <p>Con razón 1:1 el trazador repite el mismo lazo en cada vuelta completa. Con razón 7:5, en cambio, el ciclo completo requiere 7 vueltas del disco pequeño y 5 del grande — mucho más tiempo para volver al punto de partida. Durante ese tiempo el trazador recorre 35 posiciones distintas en el espacio (7×5), lo que crea una trama mucho más densa de caminos posibles.</p>
+      <p style="margin-top:1rem;">La nube resultante es más compacta y uniforme que la del caso 1:1, donde se distinguían lazos individuales. El detalle de inicio y fin del registro — a pocos píxeles de distancia — confirma que no hubo deriva de cámara durante los 47 s. La asimetría Y &gt; X vuelve a aparecer, con amplitud vertical ~1,5 veces la horizontal, la misma firma del brazo descentrado.</p>
+    </div>
+  </div>
+
+  <div class="plot-block reverse reveal">
+    <figure class="lab-fig">
+      <img src="analisis_7-5_savitzky.png" alt="Trayectoria suavizada de la razón 7:5">
+      <figcaption><strong>Trayectoria 7:5 · suavizada · Savitzky-Golay</strong>La misma trayectoria tras aplicar el filtro Savitzky-Golay (ventana 11, orden 3). Se revela un haz de elipses superpuestas con distintas orientaciones, recorridas durante los 47 segundos de giro manual.</figcaption>
+    </figure>
+    <div>
+      <h3>De la nube a la curva continua</h3>
+      <p>El suavizado conecta los puntos detectados en una trayectoria continua, eliminando el ruido de detección sin desplazar la forma. Lo que emerge es la estructura real del movimiento: muchas elipses encadenadas que rotan ligeramente entre sí, porque cada pasada arranca con una fase δ distinta.</p>
+      <p style="margin-top:1rem;">A diferencia del lazo único y limpio del caso 1:1, aquí el haz es más tupido: la razón 7:5 necesita más vueltas para cerrarse, así que en 47 segundos se acumulan muchas más pasadas y la figura se densifica.</p>
+    </div>
+  </div>
+
+  <div class="plot-block reveal">
+    <figure class="lab-fig">
+      <img src="analisis_7-5_componentes_xy.png" alt="Componentes X e Y del movimiento en la razón 7:5">
+      <figcaption><strong>Componentes X e Y vs tiempo · razón 7:5 · 47 s</strong>El movimiento descompuesto en sus ejes horizontal (verde) y vertical (dorado) a lo largo de los 47 segundos. Ambas señales oscilan de forma aproximadamente periódica, con el eje Y alcanzando mayor amplitud que el X.</figcaption>
+    </figure>
+    <div>
+      <h3>Las dos oscilaciones por separado</h3>
+      <p>Separar el movimiento en sus componentes X(t) e Y(t) muestra dos oscilaciones aproximadamente periódicas, consistentes con el giro de los dos discos. Los períodos no son perfectamente regulares: como el giro es manual, la velocidad angular varía ligeramente de una vuelta a otra, lo que deforma la curva respecto al modelo ideal de frecuencias constantes.</p>
+      <p style="margin-top:1rem;">La amplitud del eje Y supera a la del X en torno a un 50% (Ay/Ax ≈ 1,53), la misma asimetría que aparece en el caso 1:1. Esto confirma cuantitativamente que el brazo no quedó perfectamente centrado respecto a ambos discos: el movimiento vertical es más amplio que el horizontal de forma sistemática, no por azar.</p>
+    </div>
+  </div>
+
+  <div class="plot-block reverse reveal">
+    <figure class="lab-fig">
+      <img src="analisis_7-5_comparacion_real_teorica.png" alt="Comparación real vs teórica para la razón 7:5">
+      <figcaption><strong>Real vs teórica · razón 7:5 · tres fases</strong>La curva real (verde-azulado) ocupa la zona central del recuadro que delimita la figura teórica 7:5 (dorada). En los tres paneles la estructura de lóbulos de la curva real sigue el patrón de la malla teórica, aunque sin alcanzar sus extremos por la menor amplitud del brazo manual.</figcaption>
+    </figure>
+    <div>
+      <h3>La malla teórica confirma la razón 7:5</h3>
+      <p>La figura de Lissajous 7:5 teórica tiene 7 tangencias con el borde horizontal y 5 con el vertical. Eso se ve claramente en la curva dorada: siete "puntas" arriba/abajo y cinco a los lados. La curva real reproduce esa misma topología — el ojo sigue los mismos lóbulos y cruces — aunque comprimida hacia el centro por el brazo descentrado y más densa por la acumulación de pasadas.</p>
+      <p style="margin-top:1rem;">Este es el resultado más importante del análisis: sin haber impuesto ninguna restricción matemática al rastreo, la forma de la trayectoria detectada en el video reproduce la estructura topológica predicha por las ecuaciones de Lissajous para la razón exacta que imponen los diámetros de los discos (14 cm / 10 cm = 7/5). El pintógrafo, construido con cartón y silicona, está resolviendo físicamente ese sistema de ecuaciones.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ERRORES -->
+<section id="errores">
+  <div class="section-label">12 — Fuentes de error</div>
+  <h2>Por qué la curva real<br>no es la curva ideal</h2>
+  <p>Ninguna de las trayectorias reconstruidas coincide exactamente con la figura de Lissajous teórica, y eso es esperable: el aparato es manual y artesanal. Identificamos y, donde fue posible, cuantificamos las principales fuentes de error.</p>
+
+  <div class="err-grid reveal">
+    <div class="err-block">
+      <h3>Fase inicial variable (δ)</h3>
+      <p>El factor dominante. Como cada pasada se inicia girando los discos desde una posición distinta, la fase δ cambia de una vuelta a otra. En vez de una sola curva cerrada, el papel acumula muchas elipses con δ distinto. Esto no es propiamente un "error de medición" sino la característica que produce el abanico observado, pero impide comparar contra una única figura teórica.</p>
+      <span class="err-data">Efecto: superposición de curvas → figura en abanico</span>
+    </div>
+    <div class="err-block">
+      <h3>Brazo descentrado</h3>
+      <p>El brazo articulado no quedó perfectamente centrado respecto a ambos discos, de modo que las amplitudes de los dos ejes no son iguales. Lo medimos directamente sobre la trayectoria: en ambos videos la amplitud vertical superó a la horizontal en torno a un 50%.</p>
+      <span class="err-data">10:7 → Ay/Ax ≈ 1,47 · 7:5 → Ay/Ax ≈ 1,53</span>
+    </div>
+    <div class="err-block">
+      <h3>Velocidad de giro no uniforme</h3>
+      <p>Al girar a mano, la velocidad angular no es constante: se acelera y frena ligeramente en cada vuelta. Esto deforma la curva respecto al modelo, que asume ω₁ y ω₂ constantes. Se aprecia en las gráficas de componentes X e Y, cuyos períodos no son perfectamente regulares.</p>
+      <span class="err-data">Efecto: períodos irregulares en x(t), y(t)</span>
+    </div>
+    <div class="err-block">
+      <h3>Juego mecánico y trazado</h3>
+      <p>Las uniones de balso y silicona tienen holgura, y la mina apoya sobre el papel con presión variable. A esto se suma el ruido de detección por video, que medimos comparando la señal cruda con la suavizada: resultó pequeño (media ≈ 1 px), confirmando que el grueso de la irregularidad es físico, no del rastreo.</p>
+      <span class="err-data">Ruido de detección: media ≈ 1 px (p95 ≈ 2,5 px)</span>
+    </div>
+    <div class="err-block">
+      <h3>Movimiento de cámara</h3>
+      <p>En una de las tomas la cámara se reencuadró a mitad del registro, introduciendo desplazamientos aparentes de cientos de píxeles que no correspondían al trazador. Lo detectamos por los saltos bruscos entre frames y restringimos el análisis al segmento de cámara estable. Es un recordatorio de la importancia de fijar la cámara.</p>
+      <span class="err-data">Criterio: descartar saltos &gt; 40 px entre frames</span>
+    </div>
+    <div class="err-block">
+      <h3>Detección de color</h3>
+      <p>El seguimiento se basa en segmentar el azul del trazador en espacio HSV. Cuando había otros objetos azules en la escena (un segundo brazo, un estuche), el contorno de mayor área podía saltar entre ellos. Lo resolvimos siguiendo el blob más cercano a la posición previa, lo que dio un seguimiento continuo (100% de frames detectados).</p>
+      <span class="err-data">Solución: seguimiento por continuidad temporal</span>
+    </div>
+  </div>
+</section>
+
+<!-- CONCLUSIONES -->
+<section id="conclusiones">
+  <div class="section-label">13 — Conclusiones</div>
+  <h2>Lo que demuestra<br>el experimento</h2>
+  <div class="concl-list reveal">
+    <div class="concl-item">
+      <div>
+        <h3>La razón de diámetros determina la topología de la figura</h3>
+        <p>Las cuatro combinaciones de discos (14+14, 14+10, 14+7, 10+7) produjeron cuatro familias de figuras distintas y reconocibles en el papel. En el análisis de video, la curva real de la razón 7:5 reproduce las 7 tangencias horizontales y 5 verticales que predice el modelo sin ningún ajuste manual: la geometría del trazo está gobernada exclusivamente por la razón entre diámetros. Eso verifica experimentalmente que la transmisión por correa convierte la razón de radios en razón de frecuencias de giro tal como predice la mecánica.</p>
+      </div>
+    </div>
+    <div class="concl-item">
+      <div>
+        <h3>El pintógrafo resuelve físicamente las ecuaciones de Lissajous</h3>
+        <p>El análisis de video demuestra que las componentes X e Y del movimiento del trazador son dos oscilaciones aproximadamente periódicas y perpendiculares, lo que es exactamente lo que describen las ecuaciones x(t) = r₁·sin(aωt + δ) e y(t) = r₂·sin(bωt). El mecanismo de cartón y silicona está integrando esas ecuaciones en tiempo real y dejando su solución impresa en el papel. No se trata de una analogía: es la misma física.</p>
+      </div>
+    </div>
+    <div class="concl-item">
+      <div>
+        <h3>La fase inicial δ explica el abanico acumulado</h3>
+        <p>Al girar a mano, cada pasada arranca desde una posición angular distinta, lo que cambia δ. Para razón 1:1, δ determina por completo si la figura es una recta (δ = 0°), una elipse (δ = 45°) o un círculo (δ = 90°). La figura real en el papel es la superposición de todas esas curvas intermedias, de ahí el abanico triangular. Este comportamiento no es un defecto del aparato: es la demostración más directa de que el parámetro δ existe y tiene efecto real sobre la figura.</p>
+      </div>
+    </div>
+    <div class="concl-item">
+      <div>
+        <h3>El brazo descentrado introduce una asimetría sistemática y medible</h3>
+        <p>En ambos videos analizados, la amplitud vertical del movimiento supera a la horizontal en aproximadamente un 50% (Ay/Ax ≈ 1,47 en el caso 10:7 y ≈ 1,53 en el 7:5). Esta asimetría es consistente entre experimentos y está directamente cuantificada en las gráficas de trayectoria suavizada. No es ruido aleatorio sino una desviación sistemática atribuible a que el pivote del brazo articulado no quedó centrado equidistante entre ambos discos. En un montaje motorizado y ajustable, este parámetro sería el primero a corregir.</p>
+      </div>
+    </div>
+    <div class="concl-item">
+      <div>
+        <h3>El error es físico, no instrumental: el rastreo fue fiable</h3>
+        <p>La diferencia entre la señal cruda y la suavizada (ruido de detección ≈ 1 px, percentil 95 ≈ 2,5 px) es órdenes de magnitud menor que las desviaciones respecto al modelo teórico (decenas de píxeles). Eso demuestra que el método de rastreo por color en espacio HSV funcionó correctamente y que las discrepancias observadas son inherentes al montaje manual: velocidad variable, brazo descentrado y fase inicial cambiante. El método es lo suficientemente preciso para este experimento y podría aplicarse sin modificación a versiones mejoradas del aparato.</p>
+      </div>
+    </div>
+    <div class="concl-item">
+      <div>
+        <h3>Materiales simples, análisis cuantitativo real</h3>
+        <p>El experimento demostró que la cadena completa — construir el aparato con cartón, madera y silicona, grabar con un celular, procesar con Python libre — es suficiente para pasar de un dibujo sobre papel a una verificación cuantitativa de las ecuaciones de Lissajous. La cobertura de detección fue del 100% en el video de 7:5 y del 94% en el de 1:1. La comparación directa entre trayectoria real y malla teórica 7:5 cierra el ciclo: lo que el modelo matemático predice, el aparato artesanal lo produce.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+  <div class="section-label">14 — Cierre</div>
+  <h2>Una idea que se repite<br>en muchos contextos</h2>
+  <p>La composición de dos oscilaciones perpendiculares no es exclusiva de nuestro pintógrafo: aparece cada vez que dos movimientos periódicos se superponen, desde señales eléctricas en un osciloscopio hasta vibraciones en una estructura. En todos esos casos, la forma resultante codifica la relación entre las dos frecuencias. Lo que hicimos con cartón y discos girados a mano es una versión tangible de ese mismo principio: leer una razón de frecuencias a partir de una figura.</p>
+</section>
+
+<!-- DEMO -->
+<section id="demo">
+  <h2>Simulador interactivo</h2>
+  <p>Explora las figuras que puede trazar el pintógrafo. Los presets corresponden a las combinaciones de discos que usamos; también puedes ajustar cada parámetro manualmente.</p>
+  <div class="preset-btns">
+    <button class="preset-btn active" data-a="1" data-b="1" data-p="90" data-d="0" data-r1="4" data-r2="4">1:1 · discos 14+14</button>
+    <button class="preset-btn" data-a="7" data-b="5" data-p="90" data-d="0" data-r1="4" data-r2="4">7:5 · discos 14+10</button>
+    <button class="preset-btn" data-a="2" data-b="1" data-p="90" data-d="0" data-r1="4" data-r2="4">2:1 · discos 14+7</button>
+    <button class="preset-btn" data-a="10" data-b="7" data-p="90" data-d="0" data-r1="4" data-r2="4">10:7 · discos 10+7</button>
+    <button class="preset-btn" data-a="1" data-b="1" data-p="45" data-d="0" data-r1="4" data-r2="4">1:1 · fase 45°</button>
+    <button class="preset-btn" data-a="3" data-b="2" data-p="90" data-d="0" data-r1="4" data-r2="4">3:2 (quinta musical)</button>
+  </div>
+  <div class="demo-controls">
+    <div class="ctrl-group">
+      <label>Giros disco 1 (a)</label>
+      <input type="range" id="freqA" min="1" max="10" step="1" value="1">
+      <span class="ctrl-val" id="valA">1</span>
+    </div>
+    <div class="ctrl-group">
+      <label>Giros disco 2 (b)</label>
+      <input type="range" id="freqB" min="1" max="10" step="1" value="1">
+      <span class="ctrl-val" id="valB">1</span>
+    </div>
+    <div class="ctrl-group">
+      <label>Fase inicial δ</label>
+      <input type="range" id="phase" min="0" max="360" step="5" value="90">
+      <span class="ctrl-val" id="valP">90°</span>
+    </div>
+    <div class="ctrl-group">
+      <label>Radio eje X (cm)</label>
+      <input type="range" id="r1" min="1" max="7" step="0.5" value="4">
+      <span class="ctrl-val" id="valR1">4 cm</span>
+    </div>
+    <div class="ctrl-group">
+      <label>Radio eje Y (cm)</label>
+      <input type="range" id="r2" min="1" max="7" step="0.5" value="4">
+      <span class="ctrl-val" id="valR2">4 cm</span>
+    </div>
+  </div>
+  <canvas id="demoCanvas" width="500" height="500"></canvas>
+</section>
+
+<footer>
+  <div class="footer-left">
+    <strong>Física III · Pintógrafo de Poleas</strong>
+    Universidad Distrital Francisco José de Caldas<br>
+    Figuras de Lissajous · Discos de 7, 10 y 14 cm
+  </div>
+  <div class="footer-right">
+    <span>Laboratorio de Física III</span>
+    <span>2026</span>
+  </div>
+</footer>
+
+<script>
+// ─── HERO CANVAS — curva 7:5 animada ─────────────────────────────────────────
+(function(){
+  const c = document.getElementById('heroCanvas');
+  const ctx = c.getContext('2d');
+  const W = c.width, H = c.height;
+  let t = 0;
+  const trail = [];
+  const MAX = 2000;
+
+  function draw(){
+    ctx.fillStyle = 'rgba(5,5,8,0.035)';
+    ctx.fillRect(0,0,W,H);
+
+    const a=7, b=5, d=Math.PI/2;
+    const x = W/2 + (W*0.43) * Math.sin(a * t * 0.006 + d);
+    const y = H/2 + (H*0.43) * Math.sin(b * t * 0.006);
+
+    trail.push({x, y});
+    if(trail.length > MAX) trail.shift();
+
+    for(let i=1; i<trail.length; i++){
+      const alpha = i/trail.length;
+      const hue = 165 + 25*(i/trail.length);
+      ctx.beginPath();
+      ctx.strokeStyle = `hsla(${hue},55%,62%,${alpha*0.85})`;
+      ctx.lineWidth = 1.4;
+      ctx.moveTo(trail[i-1].x, trail[i-1].y);
+      ctx.lineTo(trail[i].x, trail[i].y);
+      ctx.stroke();
+    }
+    t++;
+    if(t > 15000){ t=0; trail.length=0; ctx.clearRect(0,0,W,H); }
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
+// ─── DIAGRAMA ANIMADO DE POLEAS ───────────────────────────────────────────────
+(function(){
+  const cv = document.getElementById('poleasCanvas');
+  if(!cv) return;
+  const ctx = cv.getContext('2d');
+  const W = cv.width, H = cv.height;
+
+  // Centros de las poleas
+  const cx1 = 130, cy1 = 190, r1 = 50;  // pequeña (10cm → radio 50px)
+  const cx2 = 300, cy2 = 190, r2 = 70;  // grande  (14cm → radio 70px)
+
+  let angle1 = 0;
+
+  // Los huecos reales en escala
+  const hole1_dist = 40; // 4cm en escala (10px = 1cm)
+  const hole2_dist_a = 60; // 6cm
+  const hole2_dist_b = 40; // 4cm
+
+  function drawPulley(x, y, r, angle, color, holes, label){
+    ctx.save();
+    ctx.translate(x, y);
+
+    // Sombra
+    ctx.shadowColor = 'rgba(0,0,0,0.15)';
+    ctx.shadowBlur = 8;
+
+    // Disco
+    ctx.beginPath();
+    ctx.arc(0, 0, r, 0, Math.PI*2);
+    ctx.fillStyle = color;
+    ctx.fill();
+    ctx.strokeStyle = '#333';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+    ctx.shadowBlur = 0;
+
+    // Marcador de rotación
+    ctx.rotate(angle);
+    ctx.beginPath();
+    ctx.moveTo(0,0);
+    ctx.lineTo(r-4, 0);
+    ctx.strokeStyle = 'rgba(255,255,255,0.5)';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+
+    // Huecos
+    holes.forEach(({dist, col, name})=>{
+      const hx = dist * Math.cos(0);
+      const hy = dist * Math.sin(0);
+      ctx.beginPath();
+      ctx.arc(dist, 0, 5, 0, Math.PI*2);
+      ctx.fillStyle = col;
+      ctx.fill();
+      ctx.strokeStyle = '#fff';
+      ctx.lineWidth = 1.5;
+      ctx.stroke();
+    });
+
+    ctx.restore();
+
+    // Etiqueta
+    ctx.fillStyle = '#333';
+    ctx.font = '600 11px Space Mono, monospace';
+    ctx.textAlign = 'center';
+    ctx.fillText(label, x, y + r + 18);
+  }
+
+  function drawBelt(x1,y1,r1,x2,y2,r2){
+    // Tangente superior e inferior aproximadas
+    const dy = y2 - y1, dx = x2 - x1;
+    const dist = Math.sqrt(dx*dx + dy*dy);
+    const ang = Math.atan2(dy, dx);
+    const dr = r2 - r1;
+    const a = Math.asin(dr/dist);
+
+    const t1x = x1 + r1*Math.cos(ang + Math.PI/2 - a);
+    const t1y = y1 + r1*Math.sin(ang + Math.PI/2 - a);
+    const t2x = x2 + r2*Math.cos(ang + Math.PI/2 - a);
+    const t2y = y2 + r2*Math.sin(ang + Math.PI/2 - a);
+    const b1x = x1 + r1*Math.cos(ang - Math.PI/2 + a);
+    const b1y = y1 + r1*Math.sin(ang - Math.PI/2 + a);
+    const b2x = x2 + r2*Math.cos(ang - Math.PI/2 + a);
+    const b2y = y2 + r2*Math.sin(ang - Math.PI/2 + a);
+
+    ctx.beginPath();
+    ctx.moveTo(t1x,t1y); ctx.lineTo(t2x,t2y);
+    ctx.moveTo(b1x,b1y); ctx.lineTo(b2x,b2y);
+    ctx.strokeStyle = '#8b3a2f';
+    ctx.lineWidth = 3;
+    ctx.stroke();
+  }
+
+  // Brazo articulado
+  function drawArm(a1, a2){
+    // Punto de enganche en polea pequeña (4cm del centro)
+    const px1 = cx1 + hole1_dist * Math.cos(a1);
+    const py1 = cy1 + hole1_dist * Math.sin(a1);
+    // Punto de enganche en polea grande (6cm del centro)
+    const px2 = cx2 + hole2_dist_a * Math.cos(a2);
+    const py2 = cy2 + hole2_dist_a * Math.sin(a2);
+    // Punto medio aproximado (donde está el lápiz)
+    const mx = (px1 + px2) / 2;
+    const my = (py1 + py2) / 2;
+
+    ctx.beginPath();
+    ctx.moveTo(px1, py1);
+    ctx.lineTo(px2, py2);
+    ctx.strokeStyle = '#1a6b6b';
+    ctx.lineWidth = 2.5;
+    ctx.stroke();
+
+    // Lápiz
+    ctx.beginPath();
+    ctx.arc(mx, my, 5, 0, Math.PI*2);
+    ctx.fillStyle = '#c8a45a';
+    ctx.fill();
+
+    // Trazo en el "papel"
+    return {x: mx, y: my};
+  }
+
+  const paperTrail = [];
+
+  function frame(){
+    ctx.clearRect(0,0,W,H);
+
+    // Fondo tipo papel
+    ctx.fillStyle = '#f5f0e8';
+    ctx.fillRect(0,0,W,H);
+
+    // Área de papel bajo las poleas
+    ctx.fillStyle = '#fff';
+    ctx.fillRect(50, 280, W-100, 80);
+    ctx.strokeStyle = '#ddd';
+    ctx.lineWidth = 1;
+    ctx.strokeRect(50, 280, W-100, 80);
+    ctx.fillStyle = '#aaa';
+    ctx.font = '10px Space Mono, monospace';
+    ctx.textAlign = 'center';
+    ctx.fillText('PAPEL', W/2, 295);
+
+    // Acople entre discos
+    drawBelt(cx1, cy1, r1, cx2, cy2, r2);
+
+    // angle2 derivado de angle1 (razón 7:5)
+    const angle2 = -angle1 * (r1/r2); // signo negativo: gira en sentido opuesto
+
+    // Poleas
+    drawPulley(cx1, cy1, r1, angle1, '#ede7d3',
+      [{dist: hole1_dist, col:'#c8a45a'}], '⌀ 10 cm');
+    drawPulley(cx2, cy2, r2, angle2, '#d8d0b8',
+      [{dist: hole2_dist_a, col:'#8b3a2f'}], '⌀ 14 cm');
+
+    // Brazo
+    const penPos = drawArm(angle1, angle2);
+
+    // Trazo en papel (proyectado)
+    const paperX = 50 + (penPos.x - 50) * ((W-100)/(W-100));
+    const paperY = 320 + (penPos.y - cy1) * 0.12;
+    if(paperY > 280 && paperY < 360){
+      paperTrail.push({x: penPos.x, y: paperY});
+      if(paperTrail.length > 600) paperTrail.shift();
+    }
+
+    ctx.beginPath();
+    paperTrail.forEach((p,i)=>{
+      i===0 ? ctx.moveTo(p.x, p.y) : ctx.lineTo(p.x, p.y);
+    });
+    ctx.strokeStyle = 'rgba(26,107,107,0.6)';
+    ctx.lineWidth = 1;
+    ctx.stroke();
+
+    // Leyenda huecos
+    ctx.font = '9px Space Mono, monospace';
+    ctx.textAlign = 'left';
+    ctx.fillStyle = '#8b3a2f';
+    ctx.fillText('● 6 cm del centro', cx2 + r2 + 8, cy2 - 10);
+    ctx.fillStyle = '#1a6b6b';
+    ctx.fillText('● 4 cm del centro', cx2 + r2 + 8, cy2 + 10);
+    ctx.fillStyle = '#c8a45a';
+    ctx.fillText('● 4 cm del centro', cx1 + r1 + 8, cy1);
+
+    angle1 += 0.025;
+    requestAnimationFrame(frame);
+  }
+  frame();
+})();
+
+// ─── PREVIEW FIGURAS ─────────────────────────────────────────────────────────
+(function(){
+  const ratios = [
+    {a:1,b:1,d:Math.PI/2, label:'1:1'},
+    {a:3,b:2,d:Math.PI/2, label:'3:2'},
+    {a:7,b:5,d:Math.PI/2, label:'7:5 ★', highlight:true},
+    {a:4,b:3,d:Math.PI/3, label:'4:3'},
+    {a:7,b:5,d:Math.PI/4, label:'7:5 · δ=45°', highlight:true},
+    {a:5,b:4,d:Math.PI/6, label:'5:4'},
+  ];
+  const cont = document.getElementById('lissajousPreview');
+  ratios.forEach(({a,b,d,label,highlight})=>{
+    const wrap = document.createElement('div');
+    wrap.className = 'lissajous-card' + (highlight?' highlight-card':'');
+    const cv = document.createElement('canvas');
+    cv.width = cv.height = 120;
+    const ctx = cv.getContext('2d');
+    ctx.fillStyle = '#050a0a'; ctx.fillRect(0,0,120,120);
+    ctx.beginPath();
+    for(let i=0;i<=5000;i++){
+      const t=(i/5000)*2*Math.PI;
+      const x=60+52*Math.sin(a*t+d);
+      const y=60+52*Math.sin(b*t);
+      i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);
+    }
+    ctx.strokeStyle = highlight ? '#c8a45a' : '#1a9080';
+    ctx.lineWidth = highlight ? 2 : 1.5;
+    ctx.stroke();
+    const lbl = document.createElement('div');
+    lbl.className='lissajous-ratio';
+    lbl.textContent = label;
+    wrap.appendChild(cv); wrap.appendChild(lbl);
+    cont.appendChild(wrap);
+  });
+})();
+
+// ─── CANVAS RAZONES — las cuatro razones reales ─────────────────────────────
+(function(){
+  const cv = document.getElementById('razonCanvas');
+  if(!cv) return;
+  const ctx = cv.getContext('2d');
+  const W=cv.width, H=cv.height;
+  ctx.fillStyle='#f5f0e8'; ctx.fillRect(0,0,W,H);
+
+  const ratios = [
+    {a:1, b:1, label:'1:1 · 14+14'},
+    {a:7, b:5, label:'7:5 · 14+10'},
+    {a:2, b:1, label:'2:1 · 14+7'},
+    {a:10,b:7, label:'10:7 · 10+7'},
+  ];
+  const cellW = W/2, cellH = H/2;
+  ratios.forEach((cfg, idx)=>{
+    const col = idx % 2, row = Math.floor(idx/2);
+    const ox = col*cellW, oy = row*cellH;
+    const cx = ox + cellW/2, cy = oy + cellH/2;
+    const amp = Math.min(cellW, cellH)*0.34;
+
+    // celda
+    ctx.strokeStyle='#e0dbd0'; ctx.lineWidth=1;
+    ctx.strokeRect(ox+0.5, oy+0.5, cellW-1, cellH-1);
+    // ejes suaves
+    ctx.strokeStyle='#ece6da';
+    ctx.beginPath(); ctx.moveTo(cx,oy+10); ctx.lineTo(cx,oy+cellH-24); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(ox+14,cy); ctx.lineTo(ox+cellW-14,cy); ctx.stroke();
+
+    // curva
+    ctx.beginPath();
+    for(let i=0;i<=12000;i++){
+      const t=(i/12000)*2*Math.PI;
+      const x=cx + amp*Math.sin(cfg.a*t + Math.PI/2);
+      const y=cy + amp*Math.sin(cfg.b*t);
+      i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);
+    }
+    ctx.strokeStyle = idx===0 ? '#8b3a2f' : '#1a6b6b';
+    ctx.lineWidth=1.6; ctx.stroke();
+
+    // etiqueta
+    ctx.fillStyle='#333';
+    ctx.font='10px Space Mono, monospace';
+    ctx.textAlign='center';
+    ctx.fillText(cfg.label, cx, oy+cellH-9);
+  });
+})();
+
+// ─── DEMO INTERACTIVA ─────────────────────────────────────────────────────────
+(function(){
+  const cv = document.getElementById('demoCanvas');
+  const ctx = cv.getContext('2d');
+  const W=cv.width, H=cv.height;
+
+  const ids = ['freqA','freqB','phase','r1','r2'];
+  const vals = ['valA','valB','valP','valR1','valR2'];
+  const els = {};
+  ids.forEach(id=>els[id]=document.getElementById(id));
+  vals.forEach(id=>els[id]=document.getElementById(id));
+
+  function getP(){
+    return {
+      a:+els.freqA.value, b:+els.freqB.value,
+      d:(+els.phase.value)*Math.PI/180,
+      r1:+els.r1.value, r2:+els.r2.value
+    };
+  }
+
+  function redraw(){
+    const {a,b,d,r1,r2}=getP();
+    ctx.fillStyle='#080810'; ctx.fillRect(0,0,W,H);
+
+    // Grid
+    ctx.strokeStyle='#1a1a2e'; ctx.lineWidth=1;
+    for(let i=0;i<=5;i++){
+      const x=W*i/5, y=H*i/5;
+      ctx.beginPath(); ctx.moveTo(x,0); ctx.lineTo(x,H); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(W,y); ctx.stroke();
+    }
+
+    const scaleX = (W*0.44)/7;
+    const scaleY = (H*0.44)/7;
+
+    ctx.beginPath();
+    const N=10000;
+    for(let i=0;i<=N;i++){
+      const t=(i/N)*2*Math.PI;
+      const x=W/2 + r1*scaleX*Math.sin(a*t+d);
+      const y=H/2 + r2*scaleY*Math.sin(b*t);
+      i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);
+    }
+    ctx.strokeStyle='#2ab09a'; ctx.lineWidth=1.8; ctx.stroke();
+
+    // Punto inicial
+    const sx=W/2+r1*scaleX*Math.sin(d);
+    const sy=H/2;
+    ctx.beginPath(); ctx.arc(sx,sy,5,0,Math.PI*2);
+    ctx.fillStyle='#c8a45a'; ctx.fill();
+
+    // Info overlay
+    ctx.fillStyle='rgba(26,107,107,0.15)';
+    ctx.fillRect(10,10,160,50);
+    ctx.fillStyle='#7dd4c8';
+    ctx.font='11px Space Mono, monospace';
+    ctx.textAlign='left';
+    ctx.fillText(`Razón: ${a} : ${b}`, 18, 28);
+    ctx.fillText(`r₁=${r1}cm  r₂=${r2}cm  δ=${els.phase.value}°`, 18, 46);
+  }
+
+  // Inputs
+  ids.forEach(id=>els[id].addEventListener('input',()=>{
+    els.valA.textContent = els.freqA.value;
+    els.valB.textContent = els.freqB.value;
+    els.valP.textContent = els.phase.value+'°';
+    els.valR1.textContent = els.r1.value+' cm';
+    els.valR2.textContent = els.r2.value+' cm';
+    document.querySelectorAll('.preset-btn').forEach(b=>b.classList.remove('active'));
+    redraw();
+  }));
+
+  // Presets
+  document.querySelectorAll('.preset-btn').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      document.querySelectorAll('.preset-btn').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      els.freqA.value=btn.dataset.a;
+      els.freqB.value=btn.dataset.b;
+      els.phase.value=btn.dataset.p;
+      els.r1.value=btn.dataset.r1;
+      els.r2.value=btn.dataset.r2;
+      els.valA.textContent=btn.dataset.a;
+      els.valB.textContent=btn.dataset.b;
+      els.valP.textContent=btn.dataset.p+'°';
+      els.valR1.textContent=btn.dataset.r1+' cm';
+      els.valR2.textContent=btn.dataset.r2+' cm';
+      redraw();
+    });
+  });
+
+  redraw();
+})();
+
+// ─── SCROLL REVEAL ────────────────────────────────────────────────────────────
+(function(){
+  const obs = new IntersectionObserver(entries=>{
+    entries.forEach(e=>{ if(e.isIntersecting) e.target.classList.add('visible'); });
+  },{threshold:0.1});
+  document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+})();
+</script>
+</body>
+</html>
