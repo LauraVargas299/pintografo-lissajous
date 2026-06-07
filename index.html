@@ -178,6 +178,29 @@
   .concl-item h3 { font-family: 'Playfair Display', serif; font-size: 1.4rem; font-weight: 400; margin-bottom: .6rem; }
   .concl-item p { font-size: 1.05rem; line-height: 1.8; font-weight: 300; color: #333; max-width: 720px; }
 
+  /* GUÍA PARA ESTUDIANTES */
+  #guia { background: var(--cream); }
+  .guia-intro { max-width: 760px; }
+  .guia-steps { display: grid; grid-template-columns: repeat(2, 1fr); gap: 2px; margin-top: 3rem; background: var(--line); }
+  .guia-step { background: var(--paper); padding: 2.3rem 2rem; }
+  .guia-step .gs-num { font-family: 'Space Mono', monospace; font-size: .65rem; letter-spacing: .15em; text-transform: uppercase; color: var(--teal); margin-bottom: .8rem; }
+  .guia-step h3 { font-family: 'Playfair Display', serif; font-size: 1.35rem; font-weight: 400; margin-bottom: .8rem; }
+  .guia-step p { font-size: 1rem; line-height: 1.75; font-weight: 300; color: #3a3a3a; }
+  .guia-step ul { list-style: none; margin-top: .8rem; }
+  .guia-step ul li { font-size: .95rem; padding: .35rem 0; border-bottom: 1px solid var(--line); color: #444; display: flex; gap: .6rem; }
+  .guia-step ul li::before { content: '→'; color: var(--gold); }
+  .tools-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin-top: 2.5rem; }
+  .tool-card { background: var(--paper); border-top: 3px solid var(--gold); padding: 1.8rem 1.5rem; }
+  .tool-card .tc-name { font-family: 'Playfair Display', serif; font-size: 1.25rem; margin-bottom: .2rem; }
+  .tool-card .tc-tag { font-family: 'Space Mono', monospace; font-size: .6rem; letter-spacing: .1em; text-transform: uppercase; color: var(--teal); margin-bottom: .8rem; }
+  .tool-card .tc-tag.facil { color: #4a8a4a; }
+  .tool-card .tc-tag.medio { color: var(--gold); }
+  .tool-card .tc-tag.avanzado { color: var(--rust); }
+  .tool-card p { font-size: .92rem; line-height: 1.7; font-weight: 300; color: #444; }
+  .guia-cta { margin-top: 3rem; padding: 2rem 2.5rem; background: var(--ink); color: var(--paper); border-left: 4px solid var(--gold); }
+  .guia-cta p { color: #d0d0c0; max-width: 760px; }
+  .guia-cta strong { color: var(--gold); }
+
   /* FIGURAS / IMÁGENES */
   figure.lab-fig { margin: 0; }
   figure.lab-fig img { width: 100%; height: auto; display: block; border: 1px solid var(--line); border-radius: 2px; background: #fff; }
@@ -237,6 +260,7 @@
     .plot-block.reverse figure { order: 0; }
     .err-grid { grid-template-columns: 1fr; }
     .concl-item { grid-template-columns: 1fr; gap: .5rem; }
+    .guia-steps, .tools-grid { grid-template-columns: 1fr; }
     .mat-grid { grid-template-columns: 1fr; }
     .lissajous-grid { grid-template-columns: repeat(3,1fr); }
     nav { padding: 0 1.2rem; }
@@ -259,6 +283,7 @@
     <li><a href="#nuestra-razon">Razones</a></li>
     <li><a href="#resultados">Resultados</a></li>
     <li><a href="#analisis">Análisis</a></li>
+    <li><a href="#guia">Guía</a></li>
     <li><a href="#demo">Demo</a></li>
   </ul>
 </nav>
@@ -760,7 +785,86 @@
   </div>
 </section>
 
-  <div class="section-label">14 — Cierre</div>
+<!-- GUÍA PARA FUTUROS ESTUDIANTES -->
+<section id="guia">
+  <div class="section-label">14 — Guía para futuros estudiantes</div>
+  <h2>Haz tu propio análisis<br>con este armonógrafo</h2>
+  <div class="guia-intro">
+    <p>Este aparato no termina con nuestro informe. Queda como herramienta para que otros estudiantes hagan sus propias mediciones y construyan análisis nuevos. Si tomas este pintógrafo (o construyes uno parecido), aquí tienes una ruta para convertir un dibujo bonito en un experimento con datos reales.</p>
+  </div>
+
+  <h3 style="font-family:'Playfair Display',serif; font-weight:400; font-size:1.5rem; margin-top:3rem;">¿Qué se puede medir?</h3>
+  <div class="guia-steps reveal">
+    <div class="guia-step">
+      <div class="gs-num">01 — Geometría de la figura</div>
+      <h3>La razón de giros</h3>
+      <p>Lo más directo: comprobar que la figura corresponde a la razón de los discos. Puedes hacerlo midiendo los diámetros y prediciendo la forma, o al revés, deduciendo la razón a partir de la figura observada.</p>
+      <ul>
+        <li>Diámetros de cada disco (regla o calibrador)</li>
+        <li>Número de lóbulos o puntas de la curva</li>
+        <li>Simetría y orientación de la figura</li>
+      </ul>
+    </div>
+    <div class="guia-step">
+      <div class="gs-num">02 — Movimiento en el tiempo</div>
+      <h3>Posición del trazador</h3>
+      <p>Grabando el aparato en video puedes seguir el trazador fotograma a fotograma y obtener su posición X(t) e Y(t). Con eso se mide cómo oscila cada eje y se compara con el modelo de Lissajous.</p>
+      <ul>
+        <li>Trayectoria completa sobre el papel</li>
+        <li>Amplitud de cada eje (X y Y)</li>
+        <li>Período y regularidad de las oscilaciones</li>
+      </ul>
+    </div>
+    <div class="guia-step">
+      <div class="gs-num">03 — Fuentes de error</div>
+      <h3>Qué tan ideal es el aparato</h3>
+      <p>Un buen análisis no esconde los errores, los mide. Comparar la curva real con la teórica revela cuánto se aleja el montaje del modelo ideal y por qué.</p>
+      <ul>
+        <li>Diferencia de amplitud entre ejes (descentrado)</li>
+        <li>Variación de velocidad por el giro manual</li>
+        <li>Efecto de la fase inicial en cada pasada</li>
+      </ul>
+    </div>
+    <div class="guia-step">
+      <div class="gs-num">04 — Variaciones</div>
+      <h3>Experimenta y compara</h3>
+      <p>Cambia una variable a la vez y observa el efecto. Cada combinación de discos es un experimento nuevo, y comparar varias razones da material para un informe completo.</p>
+      <ul>
+        <li>Distintas razones (cambiar los discos)</li>
+        <li>Distinta posición del brazo en el disco</li>
+        <li>Velocidad de giro rápida vs. lenta</li>
+      </ul>
+    </div>
+  </div>
+
+  <h3 style="font-family:'Playfair Display',serif; font-weight:400; font-size:1.5rem; margin-top:3.5rem;">Herramientas que puedes usar</h3>
+  <p style="margin-top:.8rem;">No necesitas software de pago. Estas son las herramientas que recomendamos, ordenadas de la más sencilla a la más avanzada:</p>
+  <div class="tools-grid reveal">
+    <div class="tool-card">
+      <div class="tc-name">Tracker</div>
+      <div class="tc-tag facil">Gratis · Fácil · Sin programar</div>
+      <p>Software libre de análisis de video pensado para física. Cargas el video, marcas el punto a seguir y Tracker te entrega las posiciones, velocidades y gráficas X(t), Y(t) automáticamente. Ideal para empezar sin escribir código. Funciona con la calibración de escala incluida, así que puedes pasar de píxeles a centímetros reales.</p>
+    </div>
+    <div class="tool-card">
+      <div class="tc-name">Hoja de cálculo</div>
+      <div class="tc-tag facil">Gratis · Fácil</div>
+      <p>Excel, Google Sheets o LibreOffice Calc. Una vez tienes los datos de posición (exportados de Tracker, por ejemplo), una hoja de cálculo basta para graficar las trayectorias, calcular amplitudes, períodos y comparar con valores esperados. Suficiente para un análisis sólido sin programar nada.</p>
+    </div>
+    <div class="tool-card">
+      <div class="tc-name">Python + OpenCV</div>
+      <div class="tc-tag avanzado">Gratis · Avanzado</div>
+      <p>Lo que usamos nosotros. Permite automatizar el seguimiento del trazador por color (HSV), suavizar la señal con filtros (Savitzky-Golay) y generar las gráficas con total control. Requiere saber programar, pero es la opción más potente y flexible. Librerías: OpenCV, NumPy, SciPy y Matplotlib, todas libres.</p>
+    </div>
+  </div>
+
+  <div class="guia-cta reveal">
+    <p><strong>Una invitación.</strong> Nos gustaría que este armonógrafo siga vivo: que cada grupo que lo use deje su análisis, pruebe una razón nueva o mejore el montaje. Empieza por lo simple — mide los discos, graba un video, ábrelo en Tracker — y ve subiendo en complejidad. La física no está solo en la figura que aparece en el papel, sino en las preguntas que te hagas sobre por qué tiene esa forma.</p>
+  </div>
+</section>
+
+<!-- CIERRE -->
+<section id="ondas">
+  <div class="section-label">15 — Cierre</div>
   <h2>Una idea que se repite<br>en muchos contextos</h2>
   <p>La composición de dos oscilaciones perpendiculares no es exclusiva de nuestro pintógrafo: aparece cada vez que dos movimientos periódicos se superponen, desde señales eléctricas en un osciloscopio hasta vibraciones en una estructura. En todos esos casos, la forma resultante codifica la relación entre las dos frecuencias. Lo que hicimos con cartón y discos girados a mano es una versión tangible de ese mismo principio: leer una razón de frecuencias a partir de una figura.</p>
 </section>
