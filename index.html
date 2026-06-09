@@ -178,6 +178,29 @@
   .concl-item h3 { font-family: 'Playfair Display', serif; font-size: 1.4rem; font-weight: 400; margin-bottom: .6rem; }
   .concl-item p { font-size: 1.05rem; line-height: 1.8; font-weight: 300; color: #333; max-width: 720px; }
 
+  /* GUÍA PARA ESTUDIANTES */
+  #guia { background: var(--cream); }
+  .guia-intro { max-width: 760px; }
+  .guia-steps { display: grid; grid-template-columns: repeat(2, 1fr); gap: 2px; margin-top: 3rem; background: var(--line); }
+  .guia-step { background: var(--paper); padding: 2.3rem 2rem; }
+  .guia-step .gs-num { font-family: 'Space Mono', monospace; font-size: .65rem; letter-spacing: .15em; text-transform: uppercase; color: var(--teal); margin-bottom: .8rem; }
+  .guia-step h3 { font-family: 'Playfair Display', serif; font-size: 1.35rem; font-weight: 400; margin-bottom: .8rem; }
+  .guia-step p { font-size: 1rem; line-height: 1.75; font-weight: 300; color: #3a3a3a; }
+  .guia-step ul { list-style: none; margin-top: .8rem; }
+  .guia-step ul li { font-size: .95rem; padding: .35rem 0; border-bottom: 1px solid var(--line); color: #444; display: flex; gap: .6rem; }
+  .guia-step ul li::before { content: '→'; color: var(--gold); }
+  .tools-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin-top: 2.5rem; }
+  .tool-card { background: var(--paper); border-top: 3px solid var(--gold); padding: 1.8rem 1.5rem; }
+  .tool-card .tc-name { font-family: 'Playfair Display', serif; font-size: 1.25rem; margin-bottom: .2rem; }
+  .tool-card .tc-tag { font-family: 'Space Mono', monospace; font-size: .6rem; letter-spacing: .1em; text-transform: uppercase; color: var(--teal); margin-bottom: .8rem; }
+  .tool-card .tc-tag.facil { color: #4a8a4a; }
+  .tool-card .tc-tag.medio { color: var(--gold); }
+  .tool-card .tc-tag.avanzado { color: var(--rust); }
+  .tool-card p { font-size: .92rem; line-height: 1.7; font-weight: 300; color: #444; }
+  .guia-cta { margin-top: 3rem; padding: 2rem 2.5rem; background: var(--ink); color: var(--paper); border-left: 4px solid var(--gold); }
+  .guia-cta p { color: #d0d0c0; max-width: 760px; }
+  .guia-cta strong { color: var(--gold); }
+
   /* FIGURAS / IMÁGENES */
   figure.lab-fig { margin: 0; }
   figure.lab-fig img { width: 100%; height: auto; display: block; border: 1px solid var(--line); border-radius: 2px; background: #fff; }
@@ -237,6 +260,7 @@
     .plot-block.reverse figure { order: 0; }
     .err-grid { grid-template-columns: 1fr; }
     .concl-item { grid-template-columns: 1fr; gap: .5rem; }
+    .guia-steps, .tools-grid { grid-template-columns: 1fr; }
     .mat-grid { grid-template-columns: 1fr; }
     .lissajous-grid { grid-template-columns: repeat(3,1fr); }
     nav { padding: 0 1.2rem; }
@@ -259,6 +283,7 @@
     <li><a href="#nuestra-razon">Razones</a></li>
     <li><a href="#resultados">Resultados</a></li>
     <li><a href="#analisis">Análisis</a></li>
+    <li><a href="#guia">Guía</a></li>
     <li><a href="#demo">Demo</a></li>
   </ul>
 </nav>
@@ -359,7 +384,7 @@
     <div class="obj-card">
       <div class="obj-num">01</div>
       <div class="obj-title">Verificar la razón de giros</div>
-      <div class="obj-text">Comprobar que la figura obtenida con cada par de discos corresponde a la razón esperada (1:1, 7:5, 2:1 o 10:7), contando los nodos de la curva sobre el papel.</div>
+      <div class="obj-text">Comprobar que la figura obtenida con cada par de discos corresponde a la razón esperada (1:1, 7:5, 2:1 o 10:7) según los diámetros utilizados.</div>
     </div>
     <div class="obj-card">
       <div class="obj-num">02</div>
@@ -602,25 +627,25 @@
 
   <div class="plot-block reveal">
     <figure class="lab-fig">
-      <img src="analisis11componentesxy.png" alt="Comparación Real vs Teórica 1:1 para distintas fases">
-      <figcaption><strong>Real vs teórica · razón 1:1 · tres fases</strong>La curva real (verde-azulado) superpuesta sobre la figura teórica 1:1 para δ = 0° (recta), δ = 45° (elipse inclinada) y δ = 90° (círculo). En los tres paneles la curva real es idéntica; lo que varía es la referencia teórica.</figcaption>
+      <img src="comparacionxy11.png" alt="Componentes X e Y del movimiento 1:1 vs tiempo">
+      <figcaption><strong>Componentes X e Y vs tiempo · razón 1:1 · 12 s</strong>El movimiento descompuesto en sus ejes horizontal (verde) y vertical (dorado) a lo largo de los 12 segundos de grabación. Ambas señales oscilan de forma aproximadamente periódica; el eje Y alcanza claramente mayor amplitud que el X.</figcaption>
     </figure>
     <div>
       <h3>Las dos oscilaciones por separado</h3>
-      <p>Esta gráfica es la comparación directa entre lo medido y lo predicho por el modelo. Para razón 1:1 la figura de Lissajous teórica es siempre una elipse o recta, pero su orientación y excentricidad dependen totalmente de δ. Con δ = 0° la teoría predice una línea diagonal; con δ = 90°, un círculo.</p>
-      <p style="margin-top:1rem;">Lo primero que salta a la vista es que la curva real no es circular sino que está fuertemente comprimida en X: es mucho más angosta de lo que predice cualquiera de los tres modelos. Eso cuantifica el descentrado del brazo: el movimiento horizontal está restringido respecto al vertical. Lo segundo notable es que la forma real se acerca más al caso δ = 90° (elipse vertical) que a los otros, lo que sugiere que la fase de arranque fue próxima a 90° durante la mayor parte del registro.</p>
+      <p>Separar el movimiento en sus componentes X(t) e Y(t) muestra dos oscilaciones aproximadamente periódicas, consistentes con el giro de los dos discos. Los períodos no son perfectamente regulares porque el giro manual hace variar la velocidad angular de una vuelta a otra.</p>
+      <p style="margin-top:1rem;">Lo más visible es la diferencia de amplitud entre los dos ejes: el eje vertical (Y) oscila con bastante más recorrido que el horizontal (X). Esa asimetría sistemática es la firma del brazo descentrado respecto a los discos, y reaparece igual en el análisis de la razón 7:5.</p>
     </div>
   </div>
 
   <div class="plot-block reverse reveal">
     <figure class="lab-fig">
-      <img src="comparacionxy11.png" alt="Trayectoria cruda 1:1 coloreada por tiempo">
-      <figcaption><strong>Trayectoria cruda · color = tiempo · detalle</strong>Vista adicional de la nube de puntos detectados en el video de razón 1:1. Se aprecian claramente dos zonas: los puntos del primer tercio del video (morado oscuro) concentrados en la parte inferior, y los del último tercio (amarillo) desplazados hacia la zona superior-derecha.</figcaption>
+      <img src="analisis11componentesxy.png" alt="Comparación real vs teórica 1:1 para distintas fases">
+      <figcaption><strong>Real vs teórica · razón 1:1 · tres fases</strong>La curva real (verde-azulado) superpuesta sobre la figura teórica 1:1 para δ = 0° (recta), δ = 45° (elipse inclinada) y δ = 90° (círculo). En los tres paneles la curva real es la misma; lo que cambia es la referencia teórica.</figcaption>
     </figure>
     <div>
-      <h3>Comparación con el modelo: lo que la curva real confirma</h3>
-      <p>Comparar la nube de puntos cruda con la trayectoria suavizada permite separar lo que es ruido del detector de lo que es variabilidad real del movimiento. En este caso el ruido es pequeño (los puntos son compactos en cada posición), y la variabilidad entre pasadas — visible como el ancho de la nube — es físicamente real: refleja que cada vuelta tiene su propia fase δ.</p>
-      <p style="margin-top:1rem;">El color del gradiente confirma además que el movimiento es repetitivo y no deriva: los puntos de colores similares aparecen en posiciones similares, lo que significa que el trazador vuelve aproximadamente al mismo lugar en cada ciclo. Esa repetibilidad, a pesar del giro manual, es una consecuencia de que la razón 1:1 es la más simple posible: el ciclo se cierra en cada vuelta completa.</p>
+      <h3>Comparación con el modelo</h3>
+      <p>Esta es la comparación directa entre lo medido y lo que predice el modelo. Para razón 1:1 la figura de Lissajous teórica es una elipse cuya orientación depende por completo de la fase δ: con δ = 0° es una recta diagonal, con δ = 90° un círculo.</p>
+      <p style="margin-top:1rem;">La curva real no coincide exactamente con ninguna de las tres, y la razón es que durante los 12 segundos los discos se giraron a mano partiendo de fases distintas en cada vuelta. La traza acumulada es la superposición de muchas elipses con δ diferente, que en conjunto producen el abanico observado en la figura sobre papel. Además se aprecia la compresión en X que ya señalaban las componentes: el brazo descentrado limita el recorrido horizontal.</p>
     </div>
   </div>
 
@@ -629,13 +654,37 @@
 
   <div class="plot-block reveal">
     <figure class="lab-fig">
-      <img src="analisis_7-5_savitzky.png" alt="Trayectoria suavizada de la razón 7:5">
-      <figcaption><strong>Trayectoria 7:5 · suavizada · 1 418 frames (47 s)</strong>La trayectoria forma una nube densa con forma de pera irregular, más ancha en la parte superior. A diferencia del caso 1:1, aquí no se distinguen lazos individuales: los 47 segundos de giro produjeron suficientes pasadas como para que la figura quede casi completamente rellena.</figcaption>
+      <img src="analisis_7-5_trayectoria_cruda.png" alt="Trayectoria cruda de la razón 7:5 coloreada por tiempo">
+      <figcaption><strong>Trayectoria cruda 7:5 · color = tiempo · 1 418 frames (47 s)</strong>La nube de puntos forma una figura irregular con forma de pera, más ancha en la parte superior. A diferencia del caso 1:1, aquí no se distinguen lazos individuales: los 47 segundos de giro produjeron suficientes pasadas como para que la figura quede casi completamente rellena.</figcaption>
     </figure>
     <div>
       <h3>Por qué la figura 7:5 llena más área</h3>
       <p>Con razón 1:1 el trazador repite el mismo lazo en cada vuelta completa. Con razón 7:5, en cambio, el ciclo completo requiere 7 vueltas del disco pequeño y 5 del grande — mucho más tiempo para volver al punto de partida. Durante ese tiempo el trazador recorre 35 posiciones distintas en el espacio (7×5), lo que crea una trama mucho más densa de caminos posibles.</p>
       <p style="margin-top:1rem;">La nube resultante es más compacta y uniforme que la del caso 1:1, donde se distinguían lazos individuales. El detalle de inicio y fin del registro — a pocos píxeles de distancia — confirma que no hubo deriva de cámara durante los 47 s. La asimetría Y &gt; X vuelve a aparecer, con amplitud vertical ~1,5 veces la horizontal, la misma firma del brazo descentrado.</p>
+    </div>
+  </div>
+
+  <div class="plot-block reverse reveal">
+    <figure class="lab-fig">
+      <img src="analisis_7-5_savitzky.png" alt="Trayectoria suavizada de la razón 7:5">
+      <figcaption><strong>Trayectoria 7:5 · suavizada · Savitzky-Golay</strong>La misma trayectoria tras aplicar el filtro Savitzky-Golay (ventana 11, orden 3). Se revela un haz de elipses superpuestas con distintas orientaciones, recorridas durante los 47 segundos de giro manual.</figcaption>
+    </figure>
+    <div>
+      <h3>De la nube a la curva continua</h3>
+      <p>El suavizado conecta los puntos detectados en una trayectoria continua, eliminando el ruido de detección sin desplazar la forma. Lo que emerge es la estructura real del movimiento: muchas elipses encadenadas que rotan ligeramente entre sí, porque cada pasada arranca con una fase δ distinta.</p>
+      <p style="margin-top:1rem;">A diferencia del lazo único y limpio del caso 1:1, aquí el haz es más tupido: la razón 7:5 necesita más vueltas para cerrarse, así que en 47 segundos se acumulan muchas más pasadas y la figura se densifica.</p>
+    </div>
+  </div>
+
+  <div class="plot-block reveal">
+    <figure class="lab-fig">
+      <img src="analisis_7-5_componentes_xy.png" alt="Componentes X e Y del movimiento en la razón 7:5">
+      <figcaption><strong>Componentes X e Y vs tiempo · razón 7:5 · 47 s</strong>El movimiento descompuesto en sus ejes horizontal (verde) y vertical (dorado) a lo largo de los 47 segundos. Ambas señales oscilan de forma aproximadamente periódica, con el eje Y alcanzando mayor amplitud que el X.</figcaption>
+    </figure>
+    <div>
+      <h3>Las dos oscilaciones por separado</h3>
+      <p>Separar el movimiento en sus componentes X(t) e Y(t) muestra dos oscilaciones aproximadamente periódicas, consistentes con el giro de los dos discos. Los períodos no son perfectamente regulares: como el giro es manual, la velocidad angular varía ligeramente de una vuelta a otra, lo que deforma la curva respecto al modelo ideal de frecuencias constantes.</p>
+      <p style="margin-top:1rem;">La amplitud del eje Y supera a la del X en torno a un 50% (Ay/Ax ≈ 1,53), la misma asimetría que aparece en el caso 1:1. Esto confirma cuantitativamente que el brazo no quedó perfectamente centrado respecto a ambos discos: el movimiento vertical es más amplio que el horizontal de forma sistemática, no por azar.</p>
     </div>
   </div>
 
@@ -736,7 +785,86 @@
   </div>
 </section>
 
-  <div class="section-label">12 — Cierre</div>
+<!-- GUÍA PARA FUTUROS ESTUDIANTES -->
+<section id="guia">
+  <div class="section-label">14 — Guía para futuros estudiantes</div>
+  <h2>Haz tu propio análisis<br>con este armonógrafo</h2>
+  <div class="guia-intro">
+    <p>Este aparato no termina con nuestro informe. Queda como herramienta para que otros estudiantes hagan sus propias mediciones y construyan análisis nuevos. Si tomas este pintógrafo (o construyes uno parecido), aquí tienes una ruta para convertir un dibujo bonito en un experimento con datos reales.</p>
+  </div>
+
+  <h3 style="font-family:'Playfair Display',serif; font-weight:400; font-size:1.5rem; margin-top:3rem;">¿Qué se puede medir?</h3>
+  <div class="guia-steps reveal">
+    <div class="guia-step">
+      <div class="gs-num">01 — Geometría de la figura</div>
+      <h3>La razón de giros</h3>
+      <p>Lo más directo: comprobar que la figura corresponde a la razón de los discos. Puedes hacerlo midiendo los diámetros y prediciendo la forma, o al revés, deduciendo la razón a partir de la figura observada.</p>
+      <ul>
+        <li>Diámetros de cada disco (regla o calibrador)</li>
+        <li>Número de lóbulos o puntas de la curva</li>
+        <li>Simetría y orientación de la figura</li>
+      </ul>
+    </div>
+    <div class="guia-step">
+      <div class="gs-num">02 — Movimiento en el tiempo</div>
+      <h3>Posición del trazador</h3>
+      <p>Grabando el aparato en video puedes seguir el trazador fotograma a fotograma y obtener su posición X(t) e Y(t). Con eso se mide cómo oscila cada eje y se compara con el modelo de Lissajous.</p>
+      <ul>
+        <li>Trayectoria completa sobre el papel</li>
+        <li>Amplitud de cada eje (X y Y)</li>
+        <li>Período y regularidad de las oscilaciones</li>
+      </ul>
+    </div>
+    <div class="guia-step">
+      <div class="gs-num">03 — Fuentes de error</div>
+      <h3>Qué tan ideal es el aparato</h3>
+      <p>Un buen análisis no esconde los errores, los mide. Comparar la curva real con la teórica revela cuánto se aleja el montaje del modelo ideal y por qué.</p>
+      <ul>
+        <li>Diferencia de amplitud entre ejes (descentrado)</li>
+        <li>Variación de velocidad por el giro manual</li>
+        <li>Efecto de la fase inicial en cada pasada</li>
+      </ul>
+    </div>
+    <div class="guia-step">
+      <div class="gs-num">04 — Variaciones</div>
+      <h3>Experimenta y compara</h3>
+      <p>Cambia una variable a la vez y observa el efecto. Cada combinación de discos es un experimento nuevo, y comparar varias razones da material para un informe completo.</p>
+      <ul>
+        <li>Distintas razones (cambiar los discos)</li>
+        <li>Distinta posición del brazo en el disco</li>
+        <li>Velocidad de giro rápida vs. lenta</li>
+      </ul>
+    </div>
+  </div>
+
+  <h3 style="font-family:'Playfair Display',serif; font-weight:400; font-size:1.5rem; margin-top:3.5rem;">Herramientas que puedes usar</h3>
+  <p style="margin-top:.8rem;">No necesitas software de pago. Estas son las herramientas que recomendamos, ordenadas de la más sencilla a la más avanzada:</p>
+  <div class="tools-grid reveal">
+    <div class="tool-card">
+      <div class="tc-name">Tracker</div>
+      <div class="tc-tag facil">Gratis · Fácil · Sin programar</div>
+      <p>Software libre de análisis de video pensado para física. Cargas el video, marcas el punto a seguir y Tracker te entrega las posiciones, velocidades y gráficas X(t), Y(t) automáticamente. Ideal para empezar sin escribir código. Funciona con la calibración de escala incluida, así que puedes pasar de píxeles a centímetros reales.</p>
+    </div>
+    <div class="tool-card">
+      <div class="tc-name">Hoja de cálculo</div>
+      <div class="tc-tag facil">Gratis · Fácil</div>
+      <p>Excel, Google Sheets o LibreOffice Calc. Una vez tienes los datos de posición (exportados de Tracker, por ejemplo), una hoja de cálculo basta para graficar las trayectorias, calcular amplitudes, períodos y comparar con valores esperados. Suficiente para un análisis sólido sin programar nada.</p>
+    </div>
+    <div class="tool-card">
+      <div class="tc-name">Python + OpenCV</div>
+      <div class="tc-tag avanzado">Gratis · Avanzado</div>
+      <p>Lo que usamos nosotros. Permite automatizar el seguimiento del trazador por color (HSV), suavizar la señal con filtros (Savitzky-Golay) y generar las gráficas con total control. Requiere saber programar, pero es la opción más potente y flexible. Librerías: OpenCV, NumPy, SciPy y Matplotlib, todas libres.</p>
+    </div>
+  </div>
+
+  <div class="guia-cta reveal">
+    <p><strong>Una invitación.</strong> Nos gustaría que este armonógrafo siga vivo: que cada grupo que lo use deje su análisis, pruebe una razón nueva o mejore el montaje. Empieza por lo simple — mide los discos, graba un video, ábrelo en Tracker — y ve subiendo en complejidad. La física no está solo en la figura que aparece en el papel, sino en las preguntas que te hagas sobre por qué tiene esa forma.</p>
+  </div>
+</section>
+
+<!-- CIERRE -->
+<section id="ondas">
+  <div class="section-label">15 — Cierre</div>
   <h2>Una idea que se repite<br>en muchos contextos</h2>
   <p>La composición de dos oscilaciones perpendiculares no es exclusiva de nuestro pintógrafo: aparece cada vez que dos movimientos periódicos se superponen, desde señales eléctricas en un osciloscopio hasta vibraciones en una estructura. En todos esos casos, la forma resultante codifica la relación entre las dos frecuencias. Lo que hicimos con cartón y discos girados a mano es una versión tangible de ese mismo principio: leer una razón de frecuencias a partir de una figura.</p>
 </section>
@@ -791,7 +919,7 @@
   </div>
   <div class="footer-right">
     <span>Laboratorio de Física III</span>
-    <span>2025</span>
+    <span>2026</span>
   </div>
 </footer>
 
